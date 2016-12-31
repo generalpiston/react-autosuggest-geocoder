@@ -1,0 +1,37 @@
+/*
+.react-autosuggest__suggestions-list,
+.react-autosuggest__suggestion {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.autosuggest-item {
+  background: #FFFFFF;
+  cursor: pointer;
+  padding: 1rem;
+}
+
+.react-autosuggest__suggestion--focused > .autosuggest-item {
+  background: $secondary-background-color;
+}
+
+.react-autosuggest__input {
+  background: white;
+  border: 1px solid #68B4FF !important;
+  border-radius: 3px;
+  box-sizing: border-box;
+  color: black;
+  line-height: 1rem;
+  margin: 0;
+  margin-bottom: 0;
+  outline-width: 0;
+  padding: 0.25rem 0.5rem;
+  width: 100%;
+}
+*/
+
+#basic {
+  margin: 0 auto;
+  width: 400px;
+}
