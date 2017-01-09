@@ -1,23 +1,26 @@
-var webpack = require('webpack'),
-    Path = require('path');
+var path = require('path')
 
 module.exports = {
-  entry: './src/index.js',
+  entry: path.join(__dirname, 'src', 'index.js'),
   output: {
     filename: 'index.js',
-    path: Path.join(__dirname, 'lib'),
+    path: path.join(__dirname, 'lib'),
     library: 'ReactAutosuggestGeocoder',
     libraryTarget: 'commonjs2'
   },
   devtool: 'source-map',
   resolve: {
-    extensions: ['', '.js']
+    extensions: ['', '.js', '.scss']
   },
   module: {
     loaders: [{
       test: /\.js$/,
       loaders: ['babel'],
       exclude: /node_modules/
+    }, {
+      test: /\.scss$/,
+      loaders: ['style', 'css', 'sass'],
+      exclude: /node_modules/
     }]
   }
-};
+}
