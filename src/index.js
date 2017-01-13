@@ -12,6 +12,7 @@ export class ReactAutosuggestGeocoder extends React.Component {
   static propTypes = {
     url: React.PropTypes.string.isRequired,
     apiKey: React.PropTypes.string.isRequired,
+    fetchDelay: React.PropTypes.number.isRequired,
     onSuggestionSelected: React.PropTypes.func.isRequired,
     getSuggestionValue: React.PropTypes.func.isRequired,
     renderSuggestion: React.PropTypes.func.isRequired
@@ -20,6 +21,7 @@ export class ReactAutosuggestGeocoder extends React.Component {
   static defaultProps = {
     url: "https://search.mapzen.com/v1",
     apiKey: null,
+    fetchDelay: 150,
     getSuggestionValue: suggestion => suggestion.properties.label,
     renderSuggestion: suggestion => (
       <div className="autosuggest-item">
@@ -36,6 +38,8 @@ export class ReactAutosuggestGeocoder extends React.Component {
       suggestions: [],
       selected: false
     };
+
+    this._onSuggestionsFetchRequested = _.debounce(this.onSuggestionsFetchRequested, this.props.fetchDelay);
   }
 
   onChange = (event, { newValue }) => {
@@ -83,13 +87,15 @@ export class ReactAutosuggestGeocoder extends React.Component {
       onSuggestionsFetchRequested,
       onSuggestionsClearRequested,
       onSuggestionSelected,
+      fetchDelay,
       ...props
     } = this.props;
+    console.log(fetchDelay)
 
     return (
       <Autosuggest
         suggestions={suggestions}
-        onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+        onSuggestionsFetchRequested={this._onSuggestionsFetchRequested}
         onSuggestionsClearRequested={this.onSuggestionsClearRequested}
         onSuggestionSelected={this.onSuggestionSelected}
         inputProps={_.defaults(inputProps || {}, {
