@@ -8,8 +8,8 @@
     "build:examples": "webpack --config webpack.config.examples.js"
   },
   "dependencies": {
-    "react-autosuggest": "^7.1.0",
-    "underscore": "^1.8.3"
+    "lodash": "^4.17.4",
+    "react-autosuggest": "^7.1.0"
   },
   "devDependencies": {
     "babel-core": "^6.21.0",
@@ -26,5 +26,28 @@
     "sass-loader": "^4.1.1",
     "style-loader": "^0.13.1",
     "webpack": "^1.14.0"
-  }
+  },
+  "keywords": [
+    "autosuggest",
+    "autocomplete",
+    "auto-suggest",
+    "auto-complete",
+    "auto suggest",
+    "auto complete",
+    "react autosuggest",
+    "react autocomplete",
+    "react auto-suggest",
+    "react auto-complete",
+    "react auto suggest",
+    "react auto complete",
+    "react-autosuggest",
+    "react-autocomplete",
+    "react-auto-suggest",
+    "react-auto-complete",
+    "react-component"
+  ],
+  "files": [
+    "lib"
+  ],
+  "license": "BSD-3"
 }

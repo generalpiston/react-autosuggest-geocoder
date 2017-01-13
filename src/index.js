@@ -1,5 +1,5 @@
 
-import * as _ from 'underscore';
+import * as _ from 'lodash';
 import $ from 'jquery';
 import React from 'react';
 
@@ -58,7 +58,7 @@ export class ReactAutosuggestGeocoder extends React.Component {
     })
     .then((data) => {
       this.setState({
-        suggestions: _.uniq(data.features, (feature) => {
+        suggestions: _.uniqBy(data.features, (feature) => {
           return feature.properties.label;
         })
       });

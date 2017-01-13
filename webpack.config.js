@@ -6,7 +6,7 @@ module.exports = {
     filename: 'index.js',
     path: path.join(__dirname, 'lib'),
     library: 'ReactAutosuggestGeocoder',
-    libraryTarget: 'commonjs2'
+    libraryTarget: 'umd'
   },
   devtool: 'source-map',
   resolve: {
