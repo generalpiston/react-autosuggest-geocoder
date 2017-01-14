@@ -90,7 +90,6 @@ export class ReactAutosuggestGeocoder extends React.Component {
       fetchDelay,
       ...props
     } = this.props;
-    console.log(fetchDelay)
 
     return (
       <Autosuggest
