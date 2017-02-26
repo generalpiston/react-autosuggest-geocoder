@@ -1,10 +1,10 @@
 var path = require('path')
 
 module.exports = {
-  entry: './examples/basic.js',
+  entry: './docs/basic.js',
   output: {
-    filename: 'basic.js',
-    path: path.join(__dirname, 'lib', 'examples')
+    filename: 'basic.bundle.js',
+    path: path.join(__dirname, 'docs')
   },
   devtool: 'source-map',
   resolve: {

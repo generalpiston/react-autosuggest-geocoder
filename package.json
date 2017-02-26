@@ -4,8 +4,7 @@
   "version": "0.5.0",
   "main": "lib/index.js",
   "scripts": {
-    "build": "webpack",
-    "build:examples": "webpack --config webpack.config.examples.js"
+    "build": "webpack && webpack --config webpack.config.docs.js"
   },
   "dependencies": {
     "lodash": "^4.17.4",
