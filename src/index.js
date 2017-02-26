@@ -76,8 +76,22 @@ export class ReactAutosuggestGeocoder extends React.Component {
   };
 
   onSuggestionSelected = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }) => {
-    this.setState({ selected: true });
-    return this.props.onSuggestionSelected(event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method })
+    const url = this.props.url + "/search";
+    return $.ajax({
+      type: 'GET',
+      url: url,
+      data: {
+        api_key: this.props.apiKey,
+        sources: "openaddresses",
+        text: suggestionValue
+      }
+    })
+    .then((data) => {
+      this.setState({
+        selected: true
+      });
+      return this.props.onSuggestionSelected(event, { search: data, suggestion, suggestionValue, suggestionIndex, sectionIndex, method })
+    });
   };
 
   render() {

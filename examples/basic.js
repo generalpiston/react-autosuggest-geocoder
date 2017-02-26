@@ -9,7 +9,8 @@ if (typeof document !== 'undefined') {
     <ReactAutosuggestGeocoder
       endpoint='https://search.mapzen.com/v1'
       apiKey='mapzen-6DCM25F'
-      onSuggestionSelected={(event, { suggestion }) => {
+      onSuggestionSelected={(event, { search, suggestion }) => {
+        console.log(search)
         console.log(suggestion)
       }} />
   ), document.getElementById('basic'))
