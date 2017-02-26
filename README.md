@@ -1,4 +1,4 @@
-# react-autosuggest-address
+# react-autosuggest-geocoder
 
 [react-autosuggest](https://github.com/moroshko/react-autosuggest) with suggestions from [pelias](https://github.com/pelias/pelias) services.
 
@@ -11,13 +11,13 @@ Check out the [demo](http://abec.github.io/react-autosuggest-geocoder)
 Through Yarn:
 
 ```
-yarn add https://github.com/abec/react-address-autocomplete
+yarn add https://github.com/abec/react-autosuggest-geocoder
 ```
 
 Through NPM:
 
 ```
-npm install --save https://github.com/abec/react-address-autocomplete
+npm install --save https://github.com/abec/react-autosuggest-geocoder
 ```
 
 ## Example
@@ -42,7 +42,7 @@ class SearchPage extends React.Component {
         <ReactAutosuggestGeocoder
           endpoint='https://search.mapzen.com/v1'
           apiKey='...'
-          onSuggestionSelected={(event, { suggestion, method }) => {
+          onSuggestionSelected={(event, { search, suggestion, method }) => {
             this.setState({
               location: suggestion.properties.label,
               latitude: suggestion.geometry.coordinates[1],
