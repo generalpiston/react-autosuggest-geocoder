@@ -14,6 +14,7 @@ export class ReactAutosuggestGeocoder extends React.Component {
     apiKey: React.PropTypes.string.isRequired,
     fetchDelay: React.PropTypes.number.isRequired,
     onSuggestionSelected: React.PropTypes.func.isRequired,
+    onReverseSelected: React.PropTypes.func.isRequired,
     getSuggestionValue: React.PropTypes.func.isRequired,
     renderSuggestion: React.PropTypes.func.isRequired,
 
@@ -27,6 +28,7 @@ export class ReactAutosuggestGeocoder extends React.Component {
     url: "https://search.mapzen.com/v1",
     apiKey: null,
     fetchDelay: 150,
+    onReverseSelected: () => {},
     getSuggestionValue: suggestion => suggestion.properties.label,
     renderSuggestion: suggestion => (
       <div className="autosuggest-item">
@@ -49,19 +51,69 @@ export class ReactAutosuggestGeocoder extends React.Component {
     this._onSuggestionsFetchRequested = _.debounce(this.onSuggestionsFetchRequested, this.props.fetchDelay);
   }
 
-  onChange = (event, { newValue }) => {
-    this.setState({
-      value: newValue,
-      selected: false
-    });
-  };
+  componentDidMount() {
+    if (this.props.center) {
+      return this.reverse(this.props.center).then((data) => {
+        if (data.features.length > 0) {
+          this.setState({
+            selected: true,
+            value: data.features[0].properties.label
+          });
+          return this.props.onReverseSelected({ search: data })
+        }
+      });
+    }
+  }
 
-  onSuggestionsFetchRequested = ({ value }) => {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.center && !_.isEqual(this.props.center, nextProps.center)) {
+      return this.reverse(nextProps.center).then((data) => {
+        if (data.features.length > 0) {
+          this.setState({
+            selected: true,
+            value: data.features[0].properties.label
+          });
+          return this.props.onReverseSelected({ search: data })
+        }
+      });
+    }
+  }
+
+  reverse(center) {
+    const url = this.props.url + "/reverse";
+    return $.ajax({
+      type: 'GET',
+      url: url,
+      data: {
+        api_key: this.props.apiKey,
+        layers: "address",
+        size: 1,
+        "point.lat": center.latitude,
+        "point.lon": center.longitude
+      }
+    })
+    
+  }
+
+  search(text) {
+    const url = this.props.url + "/search";
+    return $.ajax({
+      type: 'GET',
+      url: url,
+      data: {
+        api_key: this.props.apiKey,
+        sources: "openaddresses",
+        text: text
+      }
+    })
+  }
+
+  autocomplete(text) {
     const url = this.props.url + "/autocomplete";
     const data = {
       api_key: this.props.apiKey,
       sources: "openaddresses",
-      text: value
+      text: text
     }
     if (this.props.center) {
       data['focus.point.lat'] = this.props.center.latitude
@@ -72,7 +124,17 @@ export class ReactAutosuggestGeocoder extends React.Component {
       url: url,
       data: data
     })
-    .then((data) => {
+  }
+
+  onChange = (event, { newValue }) => {
+    this.setState({
+      value: newValue,
+      selected: false
+    });
+  };
+
+  onSuggestionsFetchRequested = ({ value }) => {
+    return this.autocomplete(value).then((data) => {
       this.setState({
         suggestions: _.uniqBy(data.features, (feature) => {
           return feature.properties.label;
@@ -88,17 +150,7 @@ export class ReactAutosuggestGeocoder extends React.Component {
   };
 
   onSuggestionSelected = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }) => {
-    const url = this.props.url + "/search";
-    return $.ajax({
-      type: 'GET',
-      url: url,
-      data: {
-        api_key: this.props.apiKey,
-        sources: "openaddresses",
-        text: suggestionValue
-      }
-    })
-    .then((data) => {
+    return this.search(suggestionValue).then((data) => {
       this.setState({
         selected: true,
         value: suggestionValue
