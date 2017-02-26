@@ -42,6 +42,7 @@ class SearchPage extends React.Component {
         <ReactAutosuggestGeocoder
           endpoint='https://search.mapzen.com/v1'
           apiKey='...'
+          center={...}
           onSuggestionSelected={(event, { search, suggestion, method }) => {
             this.setState({
               location: suggestion.properties.label,

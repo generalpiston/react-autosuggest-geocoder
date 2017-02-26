@@ -15,7 +15,12 @@ export class ReactAutosuggestGeocoder extends React.Component {
     fetchDelay: React.PropTypes.number.isRequired,
     onSuggestionSelected: React.PropTypes.func.isRequired,
     getSuggestionValue: React.PropTypes.func.isRequired,
-    renderSuggestion: React.PropTypes.func.isRequired
+    renderSuggestion: React.PropTypes.func.isRequired,
+
+    center: React.PropTypes.shape({
+      latitude: React.PropTypes.number.isRequired,
+      longitude: React.PropTypes.number.isRequired
+    })
   };
 
   static defaultProps = {
@@ -27,7 +32,9 @@ export class ReactAutosuggestGeocoder extends React.Component {
       <div className="autosuggest-item">
         {suggestion.properties.label}
       </div>
-    )
+    ),
+
+    center: null
   };
 
   constructor(props) {
@@ -51,14 +58,19 @@ export class ReactAutosuggestGeocoder extends React.Component {
 
   onSuggestionsFetchRequested = ({ value }) => {
     const url = this.props.url + "/autocomplete";
+    const data = {
+      api_key: this.props.apiKey,
+      sources: "openaddresses",
+      text: value
+    }
+    if (this.props.center) {
+      data['focus.point.lat'] = this.props.center.latitude
+      data['focus.point.lon'] = this.props.center.longitude
+    }
     return $.ajax({
       type: 'GET',
       url: url,
-      data: {
-        api_key: this.props.apiKey,
-        sources: "openaddresses",
-        text: value
-      }
+      data: data
     })
     .then((data) => {
       this.setState({
