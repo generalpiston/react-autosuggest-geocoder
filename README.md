@@ -11,13 +11,13 @@ Check out the [demo](http://abec.github.io/react-autosuggest-geocoder)
 Through Yarn:
 
 ```
-yarn add https://github.com/abec/react-autosuggest-geocoder
+yarn add react-autosuggest-geocoder
 ```
 
 Through NPM:
 
 ```
-npm install --save https://github.com/abec/react-autosuggest-geocoder
+npm install --save react-autosuggest-geocoder
 ```
 
 ## Example
