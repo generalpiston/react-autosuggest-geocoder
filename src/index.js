@@ -13,6 +13,7 @@ export class ReactAutosuggestGeocoder extends React.Component {
     url: React.PropTypes.string.isRequired,
     apiKey: React.PropTypes.string.isRequired,
     fetchDelay: React.PropTypes.number.isRequired,
+    reverseGeocode: React.PropTypes.bool.isRequired,
     onSuggestionSelected: React.PropTypes.func.isRequired,
     onReverseSelected: React.PropTypes.func.isRequired,
     getSuggestionValue: React.PropTypes.func.isRequired,
@@ -28,6 +29,7 @@ export class ReactAutosuggestGeocoder extends React.Component {
     url: "https://search.mapzen.com/v1",
     apiKey: null,
     fetchDelay: 150,
+    reverseGeocode: false,
     onReverseSelected: () => {},
     getSuggestionValue: suggestion => suggestion.properties.label,
     renderSuggestion: suggestion => (
@@ -55,10 +57,12 @@ export class ReactAutosuggestGeocoder extends React.Component {
     if (this.props.center) {
       return this.reverse(this.props.center).then((data) => {
         if (data.features.length > 0) {
-          this.setState({
-            selected: true,
-            value: data.features[0].properties.label
-          });
+          if (this.props.reverseGeocode) {
+            this.setState({
+              selected: true,
+              value: data.features[0].properties.label
+            })
+          }
           return this.props.onReverseSelected({ search: data })
         }
       });
@@ -69,10 +73,12 @@ export class ReactAutosuggestGeocoder extends React.Component {
     if (nextProps.center && !_.isEqual(this.props.center, nextProps.center)) {
       return this.reverse(nextProps.center).then((data) => {
         if (data.features.length > 0) {
-          this.setState({
-            selected: true,
-            value: data.features[0].properties.label
-          });
+          if (this.props.reverseGeocode) {
+            this.setState({
+              selected: true,
+              value: data.features[0].properties.label
+            });
+          }
           return this.props.onReverseSelected({ search: data })
         }
       });
