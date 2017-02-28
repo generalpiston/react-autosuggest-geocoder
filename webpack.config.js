@@ -10,13 +10,16 @@ module.exports = {
   },
   devtool: 'source-map',
   resolve: {
-    extensions: ['', '.js', '.scss']
+    extensions: ['', '.js', '.scss', '.json']
   },
   module: {
     loaders: [{
       test: /\.js$/,
       loaders: ['babel'],
       exclude: /node_modules/
+    }, {
+      test: /\.json$/,
+      loaders: ['json']
     }, {
       test: /\.scss$/,
       loaders: ['style', 'css', 'sass'],

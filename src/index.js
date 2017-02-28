@@ -1,7 +1,8 @@
 
 import * as _ from 'lodash';
-import $ from 'jquery';
 import React from 'react';
+import { stringify } from 'qs';
+import fetch from 'node-fetch';
 
 import Autosuggest from 'react-autosuggest';
 
@@ -87,31 +88,35 @@ export class ReactAutosuggestGeocoder extends React.Component {
 
   reverse(center) {
     const url = this.props.url + "/reverse";
-    return $.ajax({
-      type: 'GET',
-      url: url,
-      data: {
-        api_key: this.props.apiKey,
-        layers: "address",
-        size: 1,
-        "point.lat": center.latitude,
-        "point.lon": center.longitude
+    const data = {
+      api_key: this.props.apiKey,
+      layers: "address",
+      size: 1,
+      "point.lat": center.latitude,
+      "point.lon": center.longitude
+    }
+    return fetch(url + '?' + stringify(data), {
+      method: 'get',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
       }
-    })
-    
+    }).then(response => response.json())
   }
 
   search(text) {
     const url = this.props.url + "/search";
-    return $.ajax({
-      type: 'GET',
-      url: url,
-      data: {
+    return fetch(url + '?' + stringify({
         api_key: this.props.apiKey,
         sources: "openaddresses",
         text: text
+      }), {
+      method: 'get',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
       }
-    })
+    }).then(response => response.json())
   }
 
   autocomplete(text) {
@@ -125,11 +130,13 @@ export class ReactAutosuggestGeocoder extends React.Component {
       data['focus.point.lat'] = this.props.center.latitude
       data['focus.point.lon'] = this.props.center.longitude
     }
-    return $.ajax({
-      type: 'GET',
-      url: url,
-      data: data
-    })
+    return fetch(url + '?' + stringify(data), {
+      method: 'get',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }).then(response => response.json())
   }
 
   onChange = (event, { newValue }) => {
