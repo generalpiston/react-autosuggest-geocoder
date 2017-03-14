@@ -21705,13 +21705,13 @@
 		  }, {
 		    key: 'reverse',
 		    value: function reverse(center) {
-		      var url = this.props.url + "/reverse";
+		      var url = this.props.url + '/reverse';
 		      var data = {
 		        api_key: this.props.apiKey,
-		        layers: "address",
+		        layers: 'address',
 		        size: 1,
-		        "point.lat": center.latitude,
-		        "point.lon": center.longitude
+		        'point.lat': center.latitude,
+		        'point.lon': center.longitude
 		      };
 		      return (0, _nodeFetch2.default)(url + '?' + (0, _qs.stringify)(data), {
 		        method: 'get',
@@ -21726,10 +21726,10 @@
 		  }, {
 		    key: 'search',
 		    value: function search(text) {
-		      var url = this.props.url + "/search";
+		      var url = this.props.url + '/search';
 		      return (0, _nodeFetch2.default)(url + '?' + (0, _qs.stringify)({
 		        api_key: this.props.apiKey,
-		        sources: "openaddresses",
+		        sources: 'openaddresses',
 		        text: text
 		      }), {
 		        method: 'get',
@@ -21744,10 +21744,10 @@
 		  }, {
 		    key: 'autocomplete',
 		    value: function autocomplete(text) {
-		      var url = this.props.url + "/autocomplete";
+		      var url = this.props.url + '/autocomplete';
 		      var data = {
 		        api_key: this.props.apiKey,
-		        sources: "openaddresses",
+		        sources: 'openaddresses',
 		        text: text
 		      };
 		      if (this.props.center) {
@@ -21779,14 +21779,25 @@
 		          fetchDelay = _props.fetchDelay,
 		          props = _objectWithoutProperties(_props, ['inputProps', 'onSuggestionsFetchRequested', 'onSuggestionsClearRequested', 'onSuggestionSelected', 'fetchDelay']);
 		
+		      var _ref4 = inputProps || {},
+		          _onFocus = _ref4.onFocus,
+		          _onBlur = _ref4.onBlur,
+		          restOfInputProps = _objectWithoutProperties(_ref4, ['onFocus', 'onBlur']);
+		
 		      return _react2.default.createElement(_reactAutosuggest2.default, _extends({
 		        suggestions: suggestions,
 		        onSuggestionsFetchRequested: this._onSuggestionsFetchRequested,
 		        onSuggestionsClearRequested: this.onSuggestionsClearRequested,
 		        onSuggestionSelected: this.onSuggestionSelected,
-		        inputProps: _.defaults(inputProps || {}, {
+		        inputProps: _.defaults(restOfInputProps || {}, {
 		          value: value,
-		          onChange: this.onChange
+		          onChange: this.onChange,
+		          onFocus: function onFocus(e) {
+		            return _.isFunction(_onFocus) ? _onFocus(e) : undefined;
+		          },
+		          onBlur: function onBlur(e) {
+		            return _.isFunction(_onBlur) ? _onBlur(e) : undefined;
+		          }
 		        })
 		      }, props));
 		    }
@@ -21811,7 +21822,7 @@
 		  })
 		};
 		ReactAutosuggestGeocoder.defaultProps = {
-		  url: "https://search.mapzen.com/v1",
+		  url: 'https://search.mapzen.com/v1',
 		  apiKey: null,
 		  fetchDelay: 150,
 		  reverseGeocode: false,
@@ -21834,7 +21845,7 @@
 	/* 1 */
 	/***/ function(module, exports, __webpack_require__) {
 	
-		var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global, module) {/**
+		var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module) {/**
 		 * @license
 		 * Lodash <https://lodash.com/>
 		 * Copyright JS Foundation and other contributors <https://js.foundation/>
@@ -38919,7 +38930,7 @@
 		  }
 		}.call(this));
 		
-		/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(2)(module)))
+		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module)))
 	
 	/***/ },
 	/* 2 */
@@ -43593,7 +43604,7 @@
 	/* 39 */
 	/***/ function(module, exports, __webpack_require__) {
 	
-		/* WEBPACK VAR INJECTION */(function(Buffer, global) {
+		/* WEBPACK VAR INJECTION */(function(Buffer) {
 		/**
 		 * index.js
 		 *
@@ -43865,13 +43876,13 @@
 		Fetch.Headers = Headers;
 		Fetch.Request = Request;
 		
-		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(40).Buffer, (function() { return this; }())))
+		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(40).Buffer))
 	
 	/***/ },
 	/* 40 */
 	/***/ function(module, exports, __webpack_require__) {
 	
-		/* WEBPACK VAR INJECTION */(function(global) {/*!
+		/*!
 		 * The buffer module from node.js, for the browser.
 		 *
 		 * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
@@ -45660,8 +45671,7 @@
 		function isnan (val) {
 		  return val !== val // eslint-disable-line no-self-compare
 		}
-		
-		/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+	
 	
 	/***/ },
 	/* 41 */
@@ -46626,7 +46636,7 @@
 	/* 45 */
 	/***/ function(module, exports, __webpack_require__) {
 	
-		var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! https://mths.be/punycode v1.3.2 by @mathias */
+		var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module) {/*! https://mths.be/punycode v1.3.2 by @mathias */
 		;(function(root) {
 		
 			/** Detect free variables */
@@ -47155,7 +47165,7 @@
 		
 		}(this));
 		
-		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module), (function() { return this; }())))
+		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module)))
 	
 	/***/ },
 	/* 46 */
@@ -47349,7 +47359,7 @@
 	/* 50 */
 	/***/ function(module, exports, __webpack_require__) {
 	
-		/* WEBPACK VAR INJECTION */(function(global) {var ClientRequest = __webpack_require__(51)
+		var ClientRequest = __webpack_require__(51)
 		var extend = __webpack_require__(77)
 		var statusCodes = __webpack_require__(78)
 		var url = __webpack_require__(44)
@@ -47428,13 +47438,12 @@
 			'UNLOCK',
 			'UNSUBSCRIBE'
 		]
-		/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 	
 	/***/ },
 	/* 51 */
 	/***/ function(module, exports, __webpack_require__) {
 	
-		/* WEBPACK VAR INJECTION */(function(Buffer, global, process) {var capability = __webpack_require__(52)
+		/* WEBPACK VAR INJECTION */(function(Buffer, process) {var capability = __webpack_require__(52)
 		var inherits = __webpack_require__(53)
 		var response = __webpack_require__(54)
 		var stream = __webpack_require__(55)
@@ -47717,13 +47726,13 @@
 			'via'
 		]
 		
-		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(40).Buffer, (function() { return this; }()), __webpack_require__(5)))
+		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(40).Buffer, __webpack_require__(5)))
 	
 	/***/ },
 	/* 52 */
 	/***/ function(module, exports) {
 	
-		/* WEBPACK VAR INJECTION */(function(global) {exports.fetch = isFunction(global.fetch) && isFunction(global.ReadableStream)
+		exports.fetch = isFunction(global.fetch) && isFunction(global.ReadableStream)
 		
 		exports.blobConstructor = false
 		try {
@@ -47763,8 +47772,7 @@
 		}
 		
 		xhr = null // Help gc
-		
-		/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+	
 	
 	/***/ },
 	/* 53 */
@@ -47799,7 +47807,7 @@
 	/* 54 */
 	/***/ function(module, exports, __webpack_require__) {
 	
-		/* WEBPACK VAR INJECTION */(function(process, Buffer, global) {var capability = __webpack_require__(52)
+		/* WEBPACK VAR INJECTION */(function(process, Buffer) {var capability = __webpack_require__(52)
 		var inherits = __webpack_require__(53)
 		var stream = __webpack_require__(55)
 		
@@ -47980,7 +47988,7 @@
 			}
 		}
 		
-		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), __webpack_require__(40).Buffer, (function() { return this; }())))
+		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), __webpack_require__(40).Buffer))
 	
 	/***/ },
 	/* 55 */
@@ -49076,7 +49084,7 @@
 	/* 61 */
 	/***/ function(module, exports, __webpack_require__) {
 	
-		/* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
+		/* WEBPACK VAR INJECTION */(function(process) {(function (global, undefined) {
 		    "use strict";
 		
 		    if (global.setImmediate) {
@@ -49263,7 +49271,7 @@
 		    attachTo.clearImmediate = clearImmediate;
 		}(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 		
-		/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(5)))
+		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 	
 	/***/ },
 	/* 62 */
@@ -49433,7 +49441,7 @@
 	/* 64 */
 	/***/ function(module, exports) {
 	
-		/* WEBPACK VAR INJECTION */(function(global) {
+		
 		/**
 		 * Module exports.
 		 */
@@ -49500,14 +49508,13 @@
 		  if (null == val) return false;
 		  return String(val).toLowerCase() === 'true';
 		}
-		
-		/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+	
 	
 	/***/ },
 	/* 65 */
 	/***/ function(module, exports, __webpack_require__) {
 	
-		/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+		'use strict';
 		
 		var buffer = __webpack_require__(40);
 		var Buffer = buffer.Buffer;
@@ -49615,8 +49622,7 @@
 		  }
 		  return new SlowBuffer(size);
 		}
-		
-		/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+	
 	
 	/***/ },
 	/* 66 */
@@ -57778,7 +57784,7 @@
 	/* 93 */
 	/***/ function(module, exports, __webpack_require__) {
 	
-		/* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
+		/* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
 		//
 		// Permission is hereby granted, free of charge, to any person obtaining a
 		// copy of this software and associated documentation files (the
@@ -58365,7 +58371,7 @@
 		  return Object.prototype.hasOwnProperty.call(obj, prop);
 		}
 		
-		/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(5)))
+		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 	
 	/***/ },
 	/* 94 */
@@ -58411,7 +58417,7 @@
 	/* 96 */
 	/***/ function(module, exports, __webpack_require__) {
 	
-		/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+		'use strict';
 		
 		// compare and isBuffer taken from https://github.com/feross/buffer/blob/680e9e5e488f22aac27599a57dc844a6315928dd/index.js
 		// original notice:
@@ -58901,14 +58907,13 @@
 		  }
 		  return keys;
 		};
-		
-		/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+	
 	
 	/***/ },
 	/* 97 */
 	/***/ function(module, exports, __webpack_require__) {
 	
-		/* WEBPACK VAR INJECTION */(function(Buffer, global) {
+		/* WEBPACK VAR INJECTION */(function(Buffer) {
 		/**
 		 * body.js
 		 *
@@ -59169,7 +59174,7 @@
 		// expose Promise
 		Body.Promise = global.Promise;
 		
-		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(40).Buffer, (function() { return this; }())))
+		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(40).Buffer))
 	
 	/***/ },
 	/* 98 */
@@ -72942,7 +72947,7 @@
 /* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/*!
+	/*!
 	 * The buffer module from node.js, for the browser.
 	 *
 	 * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
@@ -74731,8 +74736,7 @@
 	function isnan (val) {
 	  return val !== val // eslint-disable-line no-self-compare
 	}
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
 
 /***/ },
 /* 180 */
@@ -75018,7 +75022,7 @@
 /* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
+	/* WEBPACK VAR INJECTION */(function(process) {(function (global, undefined) {
 	    "use strict";
 	
 	    if (global.setImmediate) {
@@ -75205,7 +75209,7 @@
 	    attachTo.clearImmediate = clearImmediate;
 	}(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(3)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }
 /******/ ]);

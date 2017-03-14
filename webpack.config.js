@@ -25,5 +25,8 @@ module.exports = {
       loaders: ['style', 'css', 'sass'],
       exclude: /node_modules/
     }]
+  },
+  node: {
+    global: false
   }
 }

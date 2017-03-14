@@ -17,5 +17,8 @@ module.exports = {
       exclude: [/node_modules/, /lib/]
     }],
     noParse: ['node_modules']
+  },
+  node: {
+    global: false
   }
 }
