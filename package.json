@@ -1,7 +1,7 @@
 {
   "name": "react-autosuggest-geocoder",
-  "description": "",
-  "version": "0.5.2",
+  "description": "Autosuggest addresses using a Pelias service.",
+  "version": "0.5.3",
   "repository": "https://github.com/abec/react-autosuggest-geocoder",
   "main": "lib/index.js",
   "scripts": {
@@ -30,6 +30,22 @@
     "webpack": "^1.14.0"
   },
   "keywords": [
+    "autosuggest address",
+    "autocomplete address",
+    "auto-suggest-address",
+    "auto-complete-address",
+    "auto suggest address",
+    "auto complete address",
+    "react autosuggest address",
+    "react autocomplete address",
+    "react auto-suggest address",
+    "react auto-complete address",
+    "react auto suggest address",
+    "react auto complete address",
+    "react-autosuggest-address",
+    "react-autocomplete-address",
+    "react-auto-suggest-address",
+    "react-auto-complete-address",
     "autosuggest geocoder",
     "autocomplete geocoder",
     "auto-suggest-geocoder",
