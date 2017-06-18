@@ -19,6 +19,6 @@ module.exports = {
     noParse: ['node_modules']
   },
   node: {
-    global: false
+    global: true
   }
 }

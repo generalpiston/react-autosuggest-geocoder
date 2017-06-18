@@ -22,7 +22,8 @@ export class ReactAutosuggestGeocoder extends React.Component {
     center: React.PropTypes.shape({
       latitude: React.PropTypes.number.isRequired,
       longitude: React.PropTypes.number.isRequired
-    })
+    }),
+    bounds: React.PropTypes.array
   };
 
   static defaultProps = {
@@ -85,14 +86,22 @@ export class ReactAutosuggestGeocoder extends React.Component {
     }
   }
 
-  reverse (center) {
+  reverse (center, bounds) {
     const url = this.props.url + '/reverse'
     const data = {
       api_key: this.props.apiKey,
       layers: 'address',
-      size: 1,
-      'point.lat': center.latitude,
-      'point.lon': center.longitude
+      size: 1
+    }
+    if (center) {
+      data['point.lat'] = center.latitude
+      data['point.lon'] = center.longitude
+    }
+    if (bounds) {
+      data['boundary.rect.min_lon'] = boundary[0]
+      data['boundary.rect.min_lat'] = boundary[1]
+      data['boundary.rect.max_lon'] = boundary[2]
+      data['boundary.rect.max_lat'] = boundary[3]
     }
     return fetch(url + '?' + stringify(data), {
       method: 'get',
@@ -128,6 +137,12 @@ export class ReactAutosuggestGeocoder extends React.Component {
     if (this.props.center) {
       data['focus.point.lat'] = this.props.center.latitude
       data['focus.point.lon'] = this.props.center.longitude
+    }
+    if (this.props.bounds) {
+      data['boundary.rect.min_lon'] = this.props.bounds[0]
+      data['boundary.rect.min_lat'] = this.props.bounds[1]
+      data['boundary.rect.max_lon'] = this.props.bounds[2]
+      data['boundary.rect.max_lat'] = this.props.bounds[3]
     }
     return fetch(url + '?' + stringify(data), {
       method: 'get',

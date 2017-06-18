@@ -62,6 +62,7 @@
 	      latitude: 37.7701981,
 	      longitude: -122.4522257
 	    },
+	    bounds: [-122.5257357, 37.668316, -122.3581937, 37.836074],
 	    endpoint: 'https://search.mapzen.com/v1',
 	    apiKey: 'mapzen-6DCM25F',
 	    onSuggestionSelected: function onSuggestionSelected(event, _ref) {
@@ -21504,7 +21505,7 @@
 /* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(Buffer, setImmediate, clearImmediate) {(function webpackUniversalModuleDefinition(root, factory) {
+	/* WEBPACK VAR INJECTION */(function(global, Buffer, setImmediate, clearImmediate) {(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
 		else if(typeof define === 'function' && define.amd)
@@ -21704,15 +21705,23 @@
 		    }
 		  }, {
 		    key: 'reverse',
-		    value: function reverse(center) {
+		    value: function reverse(center, bounds) {
 		      var url = this.props.url + '/reverse';
 		      var data = {
 		        api_key: this.props.apiKey,
 		        layers: 'address',
-		        size: 1,
-		        'point.lat': center.latitude,
-		        'point.lon': center.longitude
+		        size: 1
 		      };
+		      if (center) {
+		        data['point.lat'] = center.latitude;
+		        data['point.lon'] = center.longitude;
+		      }
+		      if (bounds) {
+		        data['boundary.rect.min_lon'] = boundary[0];
+		        data['boundary.rect.min_lat'] = boundary[1];
+		        data['boundary.rect.max_lon'] = boundary[2];
+		        data['boundary.rect.max_lat'] = boundary[3];
+		      }
 		      return (0, _nodeFetch2.default)(url + '?' + (0, _qs.stringify)(data), {
 		        method: 'get',
 		        headers: {
@@ -21753,6 +21762,12 @@
 		      if (this.props.center) {
 		        data['focus.point.lat'] = this.props.center.latitude;
 		        data['focus.point.lon'] = this.props.center.longitude;
+		      }
+		      if (this.props.bounds) {
+		        data['boundary.rect.min_lon'] = this.props.bounds[0];
+		        data['boundary.rect.min_lat'] = this.props.bounds[1];
+		        data['boundary.rect.max_lon'] = this.props.bounds[2];
+		        data['boundary.rect.max_lat'] = this.props.bounds[3];
 		      }
 		      return (0, _nodeFetch2.default)(url + '?' + (0, _qs.stringify)(data), {
 		        method: 'get',
@@ -21819,7 +21834,8 @@
 		  center: _react2.default.PropTypes.shape({
 		    latitude: _react2.default.PropTypes.number.isRequired,
 		    longitude: _react2.default.PropTypes.number.isRequired
-		  })
+		  }),
+		  bounds: _react2.default.PropTypes.array
 		};
 		ReactAutosuggestGeocoder.defaultProps = {
 		  url: 'https://search.mapzen.com/v1',
@@ -72941,13 +72957,13 @@
 	});
 	;
 	//# sourceMappingURL=index.js.map
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(179).Buffer, __webpack_require__(183).setImmediate, __webpack_require__(183).clearImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(179).Buffer, __webpack_require__(183).setImmediate, __webpack_require__(183).clearImmediate))
 
 /***/ },
 /* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*!
+	/* WEBPACK VAR INJECTION */(function(global) {/*!
 	 * The buffer module from node.js, for the browser.
 	 *
 	 * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
@@ -74736,7 +74752,8 @@
 	function isnan (val) {
 	  return val !== val // eslint-disable-line no-self-compare
 	}
-
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 180 */
@@ -75022,7 +75039,7 @@
 /* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {(function (global, undefined) {
+	/* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
 	    "use strict";
 	
 	    if (global.setImmediate) {
@@ -75209,7 +75226,7 @@
 	    attachTo.clearImmediate = clearImmediate;
 	}(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(3)))
 
 /***/ }
 /******/ ]);
