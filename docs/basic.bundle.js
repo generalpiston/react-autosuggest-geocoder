@@ -21738,7 +21738,7 @@
 		      var url = this.props.url + '/search';
 		      return (0, _nodeFetch2.default)(url + '?' + (0, _qs.stringify)({
 		        api_key: this.props.apiKey,
-		        sources: 'openaddresses',
+		        sources: this.props.sources,
 		        text: text
 		      }), {
 		        method: 'get',
@@ -21756,7 +21756,7 @@
 		      var url = this.props.url + '/autocomplete';
 		      var data = {
 		        api_key: this.props.apiKey,
-		        sources: 'openaddresses',
+		        sources: this.props.sources,
 		        text: text
 		      };
 		      if (this.props.center) {
@@ -21823,6 +21823,7 @@
 		
 		ReactAutosuggestGeocoder.propTypes = {
 		  url: _react2.default.PropTypes.string.isRequired,
+		  sources: _react2.default.PropTypes.string.isRequired,
 		  apiKey: _react2.default.PropTypes.string.isRequired,
 		  fetchDelay: _react2.default.PropTypes.number.isRequired,
 		  reverseGeocode: _react2.default.PropTypes.bool.isRequired,
@@ -21839,6 +21840,7 @@
 		};
 		ReactAutosuggestGeocoder.defaultProps = {
 		  url: 'https://search.mapzen.com/v1',
+		  sources: 'openaddresses',
 		  apiKey: null,
 		  fetchDelay: 150,
 		  reverseGeocode: false,
