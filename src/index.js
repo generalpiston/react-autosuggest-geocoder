@@ -11,6 +11,7 @@ import '../styles/index.scss'
 export class ReactAutosuggestGeocoder extends React.Component {
   static propTypes = {
     url: React.PropTypes.string.isRequired,
+    sources: React.PropTypes.string.isRequired,
     apiKey: React.PropTypes.string.isRequired,
     fetchDelay: React.PropTypes.number.isRequired,
     reverseGeocode: React.PropTypes.bool.isRequired,
@@ -28,6 +29,7 @@ export class ReactAutosuggestGeocoder extends React.Component {
 
   static defaultProps = {
     url: 'https://search.mapzen.com/v1',
+    sources: 'openaddresses',
     apiKey: null,
     fetchDelay: 150,
     reverseGeocode: false,
@@ -116,7 +118,7 @@ export class ReactAutosuggestGeocoder extends React.Component {
     const url = this.props.url + '/search'
     return fetch(url + '?' + stringify({
       api_key: this.props.apiKey,
-      sources: 'openaddresses',
+      sources: this.props.sources,
       text: text
     }), {
       method: 'get',
@@ -131,7 +133,7 @@ export class ReactAutosuggestGeocoder extends React.Component {
     const url = this.props.url + '/autocomplete'
     const data = {
       api_key: this.props.apiKey,
-      sources: 'openaddresses',
+      sources: this.props.sources,
       text: text
     }
     if (this.props.center) {
