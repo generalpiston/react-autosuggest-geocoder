@@ -9851,6 +9851,10 @@ if (typeof document !== 'undefined') {
 
       console.log(search);
       console.log(suggestion);
+    },
+    ref: function ref(c) {
+      console.log(c);
+      window.c = c;
     } }), document.getElementById('basic'));
 }
 

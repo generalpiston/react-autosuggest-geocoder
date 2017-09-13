@@ -103,10 +103,10 @@ export class ReactAutosuggestGeocoder extends React.Component {
       data['point.lon'] = center.longitude;
     }
     if (bounds) {
-      data['boundary.rect.min_lon'] = boundary[0];
-      data['boundary.rect.min_lat'] = boundary[1];
-      data['boundary.rect.max_lon'] = boundary[2];
-      data['boundary.rect.max_lat'] = boundary[3];
+      data['boundary.rect.min_lon'] = bounds[0];
+      data['boundary.rect.min_lat'] = bounds[1];
+      data['boundary.rect.max_lon'] = bounds[2];
+      data['boundary.rect.max_lat'] = bounds[3];
     }
     return fetch(url + '?' + stringify(data), {
       method: 'get',

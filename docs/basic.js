@@ -17,6 +17,9 @@ if (typeof document !== 'undefined') {
       onSuggestionSelected={(event, { search, suggestion }) => {
         console.log(search);
         console.log(suggestion);
+      }}
+      ref={(c) => {
+        window.c = c;
       }} />
   ), document.getElementById('basic'));
 }
