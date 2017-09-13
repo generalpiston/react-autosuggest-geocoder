@@ -5,7 +5,7 @@
   "repository": "https://github.com/abec/react-autosuggest-geocoder",
   "main": "lib/index.js",
   "scripts": {
-    "build": "webpack && webpack --config webpack.config.docs.js",
+    "build": "webpack",
     "test": "jest"
   },
   "dependencies": {
