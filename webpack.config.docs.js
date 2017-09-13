@@ -1,4 +1,4 @@
-var path = require('path')
+var path = require('path');
 
 module.exports = {
   entry: './docs/basic.js',
@@ -8,17 +8,17 @@ module.exports = {
   },
   devtool: 'source-map',
   resolve: {
-    extensions: ['', '.js']
+    extensions: ['.js']
   },
   module: {
-    loaders: [{
+    rules: [{
       test: /\.js$/,
-      loaders: ['babel'],
+      use: ['babel-loader'],
       exclude: [/node_modules/, /lib/]
     }],
-    noParse: ['node_modules']
+    noParse: [/node_modules/]
   },
   node: {
     global: true
   }
-}
+};

@@ -1,4 +1,4 @@
-var path = require('path')
+var path = require('path');
 
 module.exports = {
   entry: path.join(__dirname, 'src', 'index.js'),
@@ -10,23 +10,23 @@ module.exports = {
   },
   devtool: 'source-map',
   resolve: {
-    extensions: ['', '.js', '.scss', '.json']
+    extensions: ['.js', '.scss', '.json']
   },
   module: {
-    loaders: [{
+    rules: [{
       test: /\.js$/,
-      loaders: ['babel'],
+      use: ['babel-loader'],
       exclude: /node_modules/
     }, {
       test: /\.json$/,
-      loaders: ['json']
+      use: ['json-loader']
     }, {
       test: /\.scss$/,
-      loaders: ['style', 'css', 'sass'],
+      use: ['style-loader', 'css-loader', 'sass-loader'],
       exclude: /node_modules/
     }]
   },
   node: {
     global: false
   }
-}
+};
