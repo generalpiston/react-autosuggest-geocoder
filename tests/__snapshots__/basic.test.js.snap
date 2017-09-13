@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`basic structure test 1`] = `
+<div
+  className="react-autosuggest__container"
+>
+  <input
+    aria-activedescendant={null}
+    aria-autocomplete="list"
+    aria-expanded={false}
+    aria-haspopup={false}
+    aria-owns="react-autowhatever-1"
+    autoComplete="off"
+    className="react-autosuggest__input"
+    onBlur={[Function]}
+    onChange={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    role="combobox"
+    type="text"
+    value=""
+  />
+  <div
+    className="react-autosuggest__suggestions-container"
+    id="react-autowhatever-1"
+  />
+</div>
+`;

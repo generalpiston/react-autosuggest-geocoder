@@ -1,10 +1,10 @@
 import React from 'react';
-import ReactAutosuggestGeocoder from '../src/index.js';
+import { ReactAutosuggestGeocoder } from '../src/geocoder.js';
 import renderer from 'react-test-renderer';
 
 var API_KEY = process.env.API_KEY;
 
-test('instance methods', () => {
+test('basic structure test', () => {
   const component = renderer.create(
     <ReactAutosuggestGeocoder
       endpoint='https://search.mapzen.com/v1'
@@ -16,7 +16,7 @@ test('instance methods', () => {
           longitude: suggestion.geometry.coordinates[0]
         });
       }} />
-  );
-  component.update('865 market st., san francisco, ca');
-  expect(component.input.value).toBe('865 market st., san francisco, ca');
+    );
+  let tree = component.toJSON();
+  expect(tree).toMatchSnapshot();
 });
