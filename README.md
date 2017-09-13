@@ -55,3 +55,8 @@ class SearchPage extends React.Component {
   }
 }
 ```
+
+## License
+
+BSD-3
+

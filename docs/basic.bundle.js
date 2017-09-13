@@ -9853,7 +9853,6 @@ if (typeof document !== 'undefined') {
       console.log(suggestion);
     },
     ref: function ref(c) {
-      console.log(c);
       window.c = c;
     } }), document.getElementById('basic'));
 }
@@ -32717,10 +32716,10 @@ var ReactAutosuggestGeocoder = exports.ReactAutosuggestGeocoder = function (_Rea
         data['point.lon'] = center.longitude;
       }
       if (bounds) {
-        data['boundary.rect.min_lon'] = boundary[0];
-        data['boundary.rect.min_lat'] = boundary[1];
-        data['boundary.rect.max_lon'] = boundary[2];
-        data['boundary.rect.max_lat'] = boundary[3];
+        data['boundary.rect.min_lon'] = bounds[0];
+        data['boundary.rect.min_lat'] = bounds[1];
+        data['boundary.rect.max_lon'] = bounds[2];
+        data['boundary.rect.max_lat'] = bounds[3];
       }
       return (0, _nodeFetch2.default)(url + '?' + (0, _qs.stringify)(data), {
         method: 'get',
