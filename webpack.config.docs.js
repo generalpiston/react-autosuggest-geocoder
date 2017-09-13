@@ -15,8 +15,7 @@ module.exports = {
       test: /\.js$/,
       use: ['babel-loader'],
       exclude: [/node_modules/, /lib/]
-    }],
-    noParse: [/node_modules/]
+    }]
   },
   node: {
     global: true
