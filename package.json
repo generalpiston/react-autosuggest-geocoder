@@ -5,7 +5,8 @@
   "repository": "https://github.com/abec/react-autosuggest-geocoder",
   "main": "lib/index.js",
   "scripts": {
-    "build": "webpack && webpack --config webpack.config.docs.js"
+    "build": "webpack && webpack --config webpack.config.docs.js",
+    "test": "jest"
   },
   "dependencies": {
     "lodash": "^4.17.4",
@@ -16,6 +17,7 @@
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.0",
+    "babel-jest": "^21.0.2",
     "babel-loader": "^6.4.1",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
@@ -23,10 +25,14 @@
     "css-loader": "^0.26.4",
     "eslint": "^4.6.1",
     "eslint-plugin-react": "^7.3.0",
+    "jest": "^21.0.2",
+    "jest-cli": "^21.0.2",
     "json-loader": "^0.5.4",
     "node-sass": "^4.5.3",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
+    "react-test-renderer": "^15.6.1",
+    "regenerator-runtime": "^0.11.0",
     "sass": "^0.5.0",
     "sass-loader": "^4.1.1",
     "semistandard": "^11.0.0",
