@@ -1,5 +1,5 @@
 
-import ReactAutosuggestGeocoder from './geocoder';
+import { ReactAutosuggestGeocoder } from './geocoder';
 
 import '../styles/index.scss';
 
