@@ -61,17 +61,20 @@ class SearchPage extends React.Component {
 | :--- | :--- | :---: | :--- | :--- |
 | url | string | ✓ | https://search.mapzen.com/v1 | |
 | apiKey | string | ✓ | | Pelias service API key. Most useful with MapZen. See https://mapzen.com/developers to get a mapzen API key. |
-| sources | string | | openaddresses | Filter data by data source. See https://mapzen.com/documentation/search/search/#filter-by-data-source for more information. |
+| sources | string | ✓ | openaddresses | Filter data by data source. See https://mapzen.com/documentation/search/search/#filter-by-data-source for more information. |
 | fetchDelay | number | ✓ | 150 | Debounce API requests with this delay (in milliseconds). |
-| reverseGeocode | boolean | | false | Reverse geocode based on the provided center. |
 | center | object | | | Orient search results towards the provided center. See https://mapzen.com/documentation/search/search/#prioritize-results-by-proximity for more detail. |
 | bounds | array | | | Bounding box to limit search results. See https://mapzen.com/documentation/search/search/#search-within-a-rectangular-region for more detail. |
 | onSuggestionSelected | function | | | See https://github.com/moroshko/react-autosuggest#onSuggestionSelectedProp for details. |
 | onReverseSelected | function | | | Invoked after reverse geocoding is performed. |
-| getSuggestionValue | function | | | See https://github.com/moroshko/react-autosuggest#getsuggestionvalue-required for details. |
-| renderSuggestion | function | | | See https://github.com/moroshko/react-autosuggest#rendersuggestion-required for details. |
+| getSuggestionValue | function | ✓ | Identity Function | See https://github.com/moroshko/react-autosuggest#getsuggestionvalue-required for details. |
+| renderSuggestion | function | ✓ | Div Wrapper Function | See https://github.com/moroshko/react-autosuggest#rendersuggestion-required for details. |
 
 ## Ref Methods
+
+### reverseGeocode({ latitude, longitude })
+
+Reverse geocode the given point into the component input text field.
 
 ### update(newValue)
 

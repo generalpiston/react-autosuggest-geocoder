@@ -12,15 +12,14 @@ export class ReactAutosuggestGeocoder extends React.Component {
     sources: React.PropTypes.string.isRequired,
     apiKey: React.PropTypes.string.isRequired,
     fetchDelay: React.PropTypes.number.isRequired,
-    reverseGeocode: React.PropTypes.bool.isRequired,
     center: React.PropTypes.shape({
       latitude: React.PropTypes.number.isRequired,
       longitude: React.PropTypes.number.isRequired
     }),
     bounds: React.PropTypes.array,
 
-    onSuggestionSelected: React.PropTypes.func.isRequired,
-    onReverseSelected: React.PropTypes.func.isRequired,
+    onSuggestionSelected: React.PropTypes.func,
+    onReverseSelected: React.PropTypes.func,
     getSuggestionValue: React.PropTypes.func.isRequired,
     renderSuggestion: React.PropTypes.func.isRequired
   };
@@ -30,7 +29,6 @@ export class ReactAutosuggestGeocoder extends React.Component {
     sources: 'openaddresses',
     apiKey: null,
     fetchDelay: 150,
-    reverseGeocode: false,
     center: null,
     bounds: null,
 
@@ -57,36 +55,6 @@ export class ReactAutosuggestGeocoder extends React.Component {
 
   componentDidMount () {
     this.input = this.autosuggest.input;
-
-    if (this.props.center) {
-      return this.reverse(this.props.center).then((data) => {
-        if (data.features.length > 0) {
-          if (this.props.reverseGeocode) {
-            this.setState({
-              selected: true,
-              value: data.features[0].properties.label
-            });
-          }
-          return this.props.onReverseSelected({ search: data });
-        }
-      });
-    }
-  }
-
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.center && !_.isEqual(this.props.center, nextProps.center)) {
-      return this.reverse(nextProps.center).then((data) => {
-        if (data.features.length > 0) {
-          if (this.props.reverseGeocode) {
-            this.setState({
-              selected: true,
-              value: data.features[0].properties.label
-            });
-          }
-          return this.props.onReverseSelected({ search: data });
-        }
-      });
-    }
   }
 
   reverse (center, bounds) {
@@ -156,6 +124,23 @@ export class ReactAutosuggestGeocoder extends React.Component {
     }).then(response => response.json());
   }
 
+  reverseGeocode = (point) => {
+    let { latitude, longitude } = point || this.props.center || {};
+
+    return this.reverse({ latitude, longitude }).then((data) => {
+      if (data.features.length > 0) {
+        this.setState({
+          selected: true,
+          value: data.features[0].properties.label
+        });
+
+        if (this.props.onReverseSelected) {
+          return this.props.onReverseSelected({ search: data });
+        }
+      }
+    });
+  }
+
   blur = () => {
     this.input.blur();
   }
@@ -207,7 +192,10 @@ export class ReactAutosuggestGeocoder extends React.Component {
         selected: true,
         value: suggestionValue
       });
-      return this.props.onSuggestionSelected(event, { search: data, suggestion, suggestionValue, suggestionIndex, sectionIndex, method });
+
+      if (this.props.onSuggestionSelected) {
+        return this.props.onSuggestionSelected(event, { search: data, suggestion, suggestionValue, suggestionIndex, sectionIndex, method });
+      }
     });
   };
 
