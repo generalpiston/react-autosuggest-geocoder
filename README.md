@@ -1,18 +1,12 @@
 # react-autosuggest-geocoder
 
-[react-autosuggest](https://github.com/moroshko/react-autosuggest) with suggestions from [pelias](https://github.com/pelias/pelias) services.
+[react-autosuggest](https://github.com/moroshko/react-autosuggest) with suggestions from [pelias](https://github.com/pelias/pelias) services. Check out the [demo](http://abec.github.io/react-autosuggest-geocoder)
 
-## Demo
+![react autosuggest example](https://abec.github.io/react-autosuggest-geocoder/images/basic.gif)
 
-Check out the [demo](http://abec.github.io/react-autosuggest-geocoder)
+## Setup / Usage
 
-## Installation
-
-Through Yarn:
-
-```
-yarn add react-autosuggest-geocoder
-```
+### 1. Install react-autosuggest-geocoder
 
 Through NPM:
 
@@ -20,7 +14,13 @@ Through NPM:
 npm install --save react-autosuggest-geocoder
 ```
 
-## Example
+Through Yarn:
+
+```
+yarn add react-autosuggest-geocoder
+```
+
+### 2. Create a react component that wraps react-autosuggest-geocoder
 
 ```
 import { ReactAutosuggestGeocoder } from 'react-autosuggest-geocoder'
@@ -42,7 +42,6 @@ class SearchPage extends React.Component {
         <ReactAutosuggestGeocoder
           endpoint='https://search.mapzen.com/v1'
           apiKey='...'
-          center={...}
           onSuggestionSelected={(event, { search, suggestion, method }) => {
             this.setState({
               location: suggestion.properties.label,
