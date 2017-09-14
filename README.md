@@ -1,6 +1,6 @@
 # react-autosuggest-geocoder
 
-[react-autosuggest](https://github.com/moroshko/react-autosuggest) with suggestions from [pelias](https://github.com/pelias/pelias) services. Check out the [demo](http://abec.github.io/react-autosuggest-geocoder)
+[react-autosuggest](https://github.com/moroshko/react-autosuggest) with suggestions from [pelias](https://github.com/pelias/pelias) services. Click [here](http://abec.github.io/react-autosuggest-geocoder) to try it out.
 
 ![react autosuggest example](https://abec.github.io/react-autosuggest-geocoder/images/basic.gif)
 
