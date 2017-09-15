@@ -3,7 +3,7 @@ var path = require('path');
 module.exports = {
   entry: path.join(__dirname, 'src', 'index.js'),
   output: {
-    filename: 'index.js',
+    filename: 'react-autosuggest-geocoder.js',
     path: path.join(__dirname, 'lib'),
     library: 'ReactAutosuggestGeocoder',
     libraryTarget: 'umd'
