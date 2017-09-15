@@ -17,7 +17,14 @@ module.exports = {
       test: /\.js$/,
       use: ['babel-loader'],
       include: [
-        path.resolve(__dirname, 'examples', 'src')
+        path.resolve(__dirname, 'examples', 'src'),
+        path.resolve(__dirname, 'node_modules', 'react-autosuggest-geocoder', 'src')
+      ]
+    }, {
+      test: /\.scss$/,
+      use: ['style-loader', 'css-loader', 'sass-loader'],
+      include: [
+        path.resolve(__dirname, 'node_modules', 'react-autosuggest-geocoder', 'src')
       ]
     }]
   },
