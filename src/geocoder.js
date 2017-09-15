@@ -50,6 +50,8 @@ export class ReactAutosuggestGeocoder extends React.Component {
       selected: false
     };
 
+    this.fetch_request_number = 0;
+
     this._onSuggestionsFetchRequested = _.debounce(this.onSuggestionsFetchRequested, this.props.fetchDelay);
   }
 
@@ -163,7 +165,7 @@ export class ReactAutosuggestGeocoder extends React.Component {
     });
   }
 
-  onChange = (event, { newValue }) => {
+  onChange = (event, { newValue, method }) => {
     this.setState({
       value: newValue,
       selected: false
@@ -171,12 +173,16 @@ export class ReactAutosuggestGeocoder extends React.Component {
   };
 
   onSuggestionsFetchRequested = ({ value }) => {
+    let request_number = this.fetch_request_number = (this.fetch_request_number + 1) % 10;
+
     return this.autocomplete(value).then((data) => {
-      this.setState({
-        suggestions: _.uniqBy(data.features, (feature) => {
-          return feature.properties.label;
-        })
-      });
+      if (request_number === this.fetch_request_number) {
+        this.setState({
+          suggestions: _.uniqBy(data.features, (feature) => {
+            return feature.properties.label;
+          })
+        });
+      }
     });
   };
 
