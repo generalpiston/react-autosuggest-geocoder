@@ -18,6 +18,7 @@ export class ReactAutosuggestGeocoder extends React.Component {
     }),
     bounds: React.PropTypes.array,
 
+    onSearchSelected: React.PropTypes.func,
     onSuggestionSelected: React.PropTypes.func,
     onReverseSelected: React.PropTypes.func,
     getSuggestionValue: React.PropTypes.func.isRequired,
@@ -59,13 +60,15 @@ export class ReactAutosuggestGeocoder extends React.Component {
     this.input = this.autosuggest.input;
   }
 
-  reverse (center, bounds) {
-    const url = this.props.url + '/reverse';
+  queryParameters ({ apiKey, sources, focus, center, bounds }, extra = {}) {
     const data = {
-      api_key: this.props.apiKey,
-      layers: 'address',
-      size: 1
+      api_key: apiKey,
+      sources: sources
     };
+    if (focus) {
+      data['focus.point.lat'] = focus.latitude;
+      data['focus.point.lon'] = focus.longitude;
+    }
     if (center) {
       data['point.lat'] = center.latitude;
       data['point.lon'] = center.longitude;
@@ -76,6 +79,20 @@ export class ReactAutosuggestGeocoder extends React.Component {
       data['boundary.rect.max_lon'] = bounds[2];
       data['boundary.rect.max_lat'] = bounds[3];
     }
+    return _.assign({}, data, extra);
+  }
+
+  reverse (center, bounds) {
+    const url = this.props.url + '/reverse';
+    const { apiKey } = this.props;
+    const data = this.queryParameters({
+      apiKey,
+      center,
+      bounds
+    }, {
+      layers: 'address',
+      size: 1
+    });
     return fetch(url + '?' + stringify(data), {
       method: 'get',
       headers: {
@@ -87,11 +104,16 @@ export class ReactAutosuggestGeocoder extends React.Component {
 
   search (text) {
     const url = this.props.url + '/search';
-    return fetch(url + '?' + stringify({
-      api_key: this.props.apiKey,
-      sources: this.props.sources,
+    const { apiKey, sources, center, bounds } = this.props;
+    const data = this.queryParameters({
+      apiKey,
+      sources,
+      focus: center,
+      bounds
+    }, {
       text: text
-    }), {
+    });
+    return fetch(url + '?' + stringify(data), {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -102,21 +124,15 @@ export class ReactAutosuggestGeocoder extends React.Component {
 
   autocomplete (text) {
     const url = this.props.url + '/autocomplete';
-    const data = {
-      api_key: this.props.apiKey,
-      sources: this.props.sources,
+    const { apiKey, sources, center, bounds } = this.props;
+    const data = this.queryParameters({
+      apiKey,
+      sources,
+      focus: center,
+      bounds
+    }, {
       text: text
-    };
-    if (this.props.center) {
-      data['focus.point.lat'] = this.props.center.latitude;
-      data['focus.point.lon'] = this.props.center.longitude;
-    }
-    if (this.props.bounds) {
-      data['boundary.rect.min_lon'] = this.props.bounds[0];
-      data['boundary.rect.min_lat'] = this.props.bounds[1];
-      data['boundary.rect.max_lon'] = this.props.bounds[2];
-      data['boundary.rect.max_lat'] = this.props.bounds[3];
-    }
+    });
     return fetch(url + '?' + stringify(data), {
       method: 'get',
       headers: {
@@ -193,14 +209,52 @@ export class ReactAutosuggestGeocoder extends React.Component {
   };
 
   onSuggestionSelected = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }) => {
+    if (this.props.onSuggestionSelected) {
+      return this.props.onSuggestionSelected(event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method });
+    }
+  };
+
+  onEnterCapture = (event) => {
+    if (event.keyCode !== 13) {
+      return;
+    }
+
+    if (!this.autosuggest) {
+      return;
+    }
+
+    if (this.autosuggest.getHighlightedSuggestion() !== null) {
+      return;
+    }
+
+    return this.onEnterWithoutHighlight(event);
+  };
+
+  onEnterWithoutHighlight = (event) => {
+    let { value } = this.state;
+    let suggestionValue = value;
+
     return this.search(suggestionValue).then((data) => {
+      if (!data) {
+        return;
+      }
+
+      if (!data.features) {
+        return;
+      }
+
+      if (!data.features.length) {
+        return;
+      }
+
+      let suggestion = data.features[0];
       this.setState({
         selected: true,
-        value: suggestionValue
+        value: suggestion.properties.label
       });
 
-      if (this.props.onSuggestionSelected) {
-        return this.props.onSuggestionSelected(event, { search: data, suggestion, suggestionValue, suggestionIndex, sectionIndex, method });
+      if (this.props.onSearchSelected) {
+        return this.props.onSearchSelected(event, { search: data, suggestion, suggestionValue, method: 'enter' });
       }
     });
   };
@@ -215,7 +269,7 @@ export class ReactAutosuggestGeocoder extends React.Component {
       fetchDelay,
       ...props
     } = this.props;
-    const { onFocus, onBlur, ...restOfInputProps } = (inputProps || {});
+    const { onFocus, onBlur, onKeyDownCapture, ...restOfInputProps } = (inputProps || {});
 
     return (
       <Autosuggest
@@ -227,7 +281,8 @@ export class ReactAutosuggestGeocoder extends React.Component {
           value: value,
           onChange: this.onChange,
           onFocus: e => _.isFunction(onFocus) ? onFocus(e) : undefined,
-          onBlur: e => _.isFunction(onBlur) ? onBlur(e) : undefined
+          onBlur: e => _.isFunction(onBlur) ? onBlur(e) : undefined,
+          onKeyDownCapture: this.onEnterCapture
         })}
         ref={(autosuggestRef) => {
           if (autosuggestRef !== null) {
