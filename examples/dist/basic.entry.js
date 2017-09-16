@@ -29974,7 +29974,8 @@ var ReactAutosuggestGeocoder = exports.ReactAutosuggestGeocoder = function (_Rea
     };
 
     _this.onChange = function (event, _ref2) {
-      var newValue = _ref2.newValue;
+      var newValue = _ref2.newValue,
+          method = _ref2.method;
 
       _this.setState({
         value: newValue,
@@ -29985,12 +29986,16 @@ var ReactAutosuggestGeocoder = exports.ReactAutosuggestGeocoder = function (_Rea
     _this.onSuggestionsFetchRequested = function (_ref3) {
       var value = _ref3.value;
 
+      var request_number = _this.fetch_request_number = (_this.fetch_request_number + 1) % 10;
+
       return _this.autocomplete(value).then(function (data) {
-        _this.setState({
-          suggestions: _.uniqBy(data.features, function (feature) {
-            return feature.properties.label;
-          })
-        });
+        if (request_number === _this.fetch_request_number) {
+          _this.setState({
+            suggestions: _.uniqBy(data.features, function (feature) {
+              return feature.properties.label;
+            })
+          });
+        }
       });
     };
 
@@ -30007,14 +30012,53 @@ var ReactAutosuggestGeocoder = exports.ReactAutosuggestGeocoder = function (_Rea
           sectionIndex = _ref4.sectionIndex,
           method = _ref4.method;
 
+      if (_this.props.onSuggestionSelected) {
+        return _this.props.onSuggestionSelected(event, { suggestion: suggestion, suggestionValue: suggestionValue, suggestionIndex: suggestionIndex, sectionIndex: sectionIndex, method: method });
+      }
+    };
+
+    _this.onEnterCapture = function (event) {
+      if (event.keyCode !== 13) {
+        return;
+      }
+
+      if (!_this.autosuggest) {
+        return;
+      }
+
+      if (_this.autosuggest.getHighlightedSuggestion() !== null) {
+        return;
+      }
+
+      return _this.onEnterWithoutHighlight(event);
+    };
+
+    _this.onEnterWithoutHighlight = function (event) {
+      var value = _this.state.value;
+
+      var suggestionValue = value;
+
       return _this.search(suggestionValue).then(function (data) {
+        if (!data) {
+          return;
+        }
+
+        if (!data.features) {
+          return;
+        }
+
+        if (!data.features.length) {
+          return;
+        }
+
+        var suggestion = data.features[0];
         _this.setState({
           selected: true,
-          value: suggestionValue
+          value: suggestion.properties.label
         });
 
-        if (_this.props.onSuggestionSelected) {
-          return _this.props.onSuggestionSelected(event, { search: data, suggestion: suggestion, suggestionValue: suggestionValue, suggestionIndex: suggestionIndex, sectionIndex: sectionIndex, method: method });
+        if (_this.props.onSearchSelected) {
+          return _this.props.onSearchSelected(event, { search: data, suggestion: suggestion, suggestionValue: suggestionValue, method: 'enter' });
         }
       });
     };
@@ -30024,6 +30068,8 @@ var ReactAutosuggestGeocoder = exports.ReactAutosuggestGeocoder = function (_Rea
       suggestions: [],
       selected: false
     };
+
+    _this.fetch_request_number = 0;
 
     _this._onSuggestionsFetchRequested = _.debounce(_this.onSuggestionsFetchRequested, _this.props.fetchDelay);
     return _this;
@@ -30035,14 +30081,23 @@ var ReactAutosuggestGeocoder = exports.ReactAutosuggestGeocoder = function (_Rea
       this.input = this.autosuggest.input;
     }
   }, {
-    key: 'reverse',
-    value: function reverse(center, bounds) {
-      var url = this.props.url + '/reverse';
+    key: 'queryParameters',
+    value: function queryParameters(_ref5) {
+      var apiKey = _ref5.apiKey,
+          sources = _ref5.sources,
+          focus = _ref5.focus,
+          center = _ref5.center,
+          bounds = _ref5.bounds;
+      var extra = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
       var data = {
-        api_key: this.props.apiKey,
-        layers: 'address',
-        size: 1
+        api_key: apiKey,
+        sources: sources
       };
+      if (focus) {
+        data['focus.point.lat'] = focus.latitude;
+        data['focus.point.lon'] = focus.longitude;
+      }
       if (center) {
         data['point.lat'] = center.latitude;
         data['point.lon'] = center.longitude;
@@ -30053,6 +30108,22 @@ var ReactAutosuggestGeocoder = exports.ReactAutosuggestGeocoder = function (_Rea
         data['boundary.rect.max_lon'] = bounds[2];
         data['boundary.rect.max_lat'] = bounds[3];
       }
+      return _.assign({}, data, extra);
+    }
+  }, {
+    key: 'reverse',
+    value: function reverse(center, bounds) {
+      var url = this.props.url + '/reverse';
+      var apiKey = this.props.apiKey;
+
+      var data = this.queryParameters({
+        apiKey: apiKey,
+        center: center,
+        bounds: bounds
+      }, {
+        layers: 'address',
+        size: 1
+      });
       return (0, _nodeFetch2.default)(url + '?' + (0, _qs.stringify)(data), {
         method: 'get',
         headers: {
@@ -30067,11 +30138,21 @@ var ReactAutosuggestGeocoder = exports.ReactAutosuggestGeocoder = function (_Rea
     key: 'search',
     value: function search(text) {
       var url = this.props.url + '/search';
-      return (0, _nodeFetch2.default)(url + '?' + (0, _qs.stringify)({
-        api_key: this.props.apiKey,
-        sources: this.props.sources,
+      var _props = this.props,
+          apiKey = _props.apiKey,
+          sources = _props.sources,
+          center = _props.center,
+          bounds = _props.bounds;
+
+      var data = this.queryParameters({
+        apiKey: apiKey,
+        sources: sources,
+        focus: center,
+        bounds: bounds
+      }, {
         text: text
-      }), {
+      });
+      return (0, _nodeFetch2.default)(url + '?' + (0, _qs.stringify)(data), {
         method: 'get',
         headers: {
           'Accept': 'application/json',
@@ -30085,21 +30166,20 @@ var ReactAutosuggestGeocoder = exports.ReactAutosuggestGeocoder = function (_Rea
     key: 'autocomplete',
     value: function autocomplete(text) {
       var url = this.props.url + '/autocomplete';
-      var data = {
-        api_key: this.props.apiKey,
-        sources: this.props.sources,
+      var _props2 = this.props,
+          apiKey = _props2.apiKey,
+          sources = _props2.sources,
+          center = _props2.center,
+          bounds = _props2.bounds;
+
+      var data = this.queryParameters({
+        apiKey: apiKey,
+        sources: sources,
+        focus: center,
+        bounds: bounds
+      }, {
         text: text
-      };
-      if (this.props.center) {
-        data['focus.point.lat'] = this.props.center.latitude;
-        data['focus.point.lon'] = this.props.center.longitude;
-      }
-      if (this.props.bounds) {
-        data['boundary.rect.min_lon'] = this.props.bounds[0];
-        data['boundary.rect.min_lat'] = this.props.bounds[1];
-        data['boundary.rect.max_lon'] = this.props.bounds[2];
-        data['boundary.rect.max_lat'] = this.props.bounds[3];
-      }
+      });
       return (0, _nodeFetch2.default)(url + '?' + (0, _qs.stringify)(data), {
         method: 'get',
         headers: {
@@ -30119,18 +30199,19 @@ var ReactAutosuggestGeocoder = exports.ReactAutosuggestGeocoder = function (_Rea
           suggestions = _state.suggestions,
           value = _state.value;
 
-      var _props = this.props,
-          inputProps = _props.inputProps,
-          onSuggestionsFetchRequested = _props.onSuggestionsFetchRequested,
-          onSuggestionsClearRequested = _props.onSuggestionsClearRequested,
-          onSuggestionSelected = _props.onSuggestionSelected,
-          fetchDelay = _props.fetchDelay,
-          props = _objectWithoutProperties(_props, ['inputProps', 'onSuggestionsFetchRequested', 'onSuggestionsClearRequested', 'onSuggestionSelected', 'fetchDelay']);
+      var _props3 = this.props,
+          inputProps = _props3.inputProps,
+          onSuggestionsFetchRequested = _props3.onSuggestionsFetchRequested,
+          onSuggestionsClearRequested = _props3.onSuggestionsClearRequested,
+          onSuggestionSelected = _props3.onSuggestionSelected,
+          fetchDelay = _props3.fetchDelay,
+          props = _objectWithoutProperties(_props3, ['inputProps', 'onSuggestionsFetchRequested', 'onSuggestionsClearRequested', 'onSuggestionSelected', 'fetchDelay']);
 
-      var _ref5 = inputProps || {},
-          _onFocus = _ref5.onFocus,
-          _onBlur = _ref5.onBlur,
-          restOfInputProps = _objectWithoutProperties(_ref5, ['onFocus', 'onBlur']);
+      var _ref6 = inputProps || {},
+          _onFocus = _ref6.onFocus,
+          _onBlur = _ref6.onBlur,
+          onKeyDownCapture = _ref6.onKeyDownCapture,
+          restOfInputProps = _objectWithoutProperties(_ref6, ['onFocus', 'onBlur', 'onKeyDownCapture']);
 
       return _react2.default.createElement(_reactAutosuggest2.default, _extends({
         suggestions: suggestions,
@@ -30145,7 +30226,8 @@ var ReactAutosuggestGeocoder = exports.ReactAutosuggestGeocoder = function (_Rea
           },
           onBlur: function onBlur(e) {
             return _.isFunction(_onBlur) ? _onBlur(e) : undefined;
-          }
+          },
+          onKeyDownCapture: this.onEnterCapture
         }),
         ref: function ref(autosuggestRef) {
           if (autosuggestRef !== null) {
@@ -30170,6 +30252,7 @@ ReactAutosuggestGeocoder.propTypes = {
   }),
   bounds: _react2.default.PropTypes.array,
 
+  onSearchSelected: _react2.default.PropTypes.func,
   onSuggestionSelected: _react2.default.PropTypes.func,
   onReverseSelected: _react2.default.PropTypes.func,
   getSuggestionValue: _react2.default.PropTypes.func.isRequired,
