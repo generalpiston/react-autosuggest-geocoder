@@ -26,7 +26,7 @@ export class ReactAutosuggestGeocoder extends React.Component {
   };
 
   static defaultProps = {
-    url: 'https://search.mapzen.com/v1',
+    url: 'https://api.geocode.earth/v1',
     sources: 'openaddresses',
     apiKey: null,
     fetchDelay: 150,

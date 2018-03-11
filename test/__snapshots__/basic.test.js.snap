@@ -16,6 +16,7 @@ exports[`basic structure test 1`] = `
     onChange={[Function]}
     onFocus={[Function]}
     onKeyDown={[Function]}
+    onKeyDownCapture={[Function]}
     role="combobox"
     type="text"
     value=""

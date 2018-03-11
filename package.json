@@ -75,7 +75,8 @@
     "react-auto-suggest-geocoder",
     "react-auto-complete-geocoder",
     "react-component",
-    "mapzen"
+    "mapzen",
+    "geocode.earth"
   ],
   "files": [
     "lib",

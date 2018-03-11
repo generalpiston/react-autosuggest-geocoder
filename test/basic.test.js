@@ -7,7 +7,7 @@ var API_KEY = process.env.API_KEY;
 test('basic structure test', () => {
   const component = renderer.create(
     <ReactAutosuggestGeocoder
-      endpoint='https://search.mapzen.com/v1'
+      endpoint='https://api.geocode.earth/v1'
       apiKey={API_KEY}
       onSuggestionSelected={(event, { search, suggestion, method }) => {
         this.setState({
