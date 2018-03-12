@@ -1,7 +1,7 @@
 {
   "name": "react-autosuggest-geocoder",
   "description": "Autosuggest addresses using a Pelias service.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": "https://github.com/abec/react-autosuggest-geocoder",
   "main": "src/index.js",
   "scripts": {

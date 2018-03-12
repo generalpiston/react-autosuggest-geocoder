@@ -1,9 +1,7 @@
-
 import * as _ from 'lodash';
 import React from 'react';
 import { stringify } from 'qs';
 import fetch from 'node-fetch';
-
 import Autosuggest from 'react-autosuggest';
 
 export class ReactAutosuggestGeocoder extends React.Component {
@@ -96,8 +94,7 @@ export class ReactAutosuggestGeocoder extends React.Component {
     return fetch(url + '?' + stringify(data), {
       method: 'get',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Accept': 'application/json'
       }
     }).then(response => response.json());
   }
@@ -116,8 +113,7 @@ export class ReactAutosuggestGeocoder extends React.Component {
     return fetch(url + '?' + stringify(data), {
       method: 'get',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Accept': 'application/json'
       }
     }).then(response => response.json());
   }
@@ -136,8 +132,7 @@ export class ReactAutosuggestGeocoder extends React.Component {
     return fetch(url + '?' + stringify(data), {
       method: 'get',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Accept': 'application/json'
       }
     }).then(response => response.json());
   }
