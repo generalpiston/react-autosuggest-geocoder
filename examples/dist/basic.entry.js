@@ -30127,8 +30127,7 @@ var ReactAutosuggestGeocoder = exports.ReactAutosuggestGeocoder = function (_Rea
       return (0, _nodeFetch2.default)(url + '?' + (0, _qs.stringify)(data), {
         method: 'get',
         headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Accept': 'application/json'
         }
       }).then(function (response) {
         return response.json();
@@ -30155,8 +30154,7 @@ var ReactAutosuggestGeocoder = exports.ReactAutosuggestGeocoder = function (_Rea
       return (0, _nodeFetch2.default)(url + '?' + (0, _qs.stringify)(data), {
         method: 'get',
         headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Accept': 'application/json'
         }
       }).then(function (response) {
         return response.json();
@@ -30183,8 +30181,7 @@ var ReactAutosuggestGeocoder = exports.ReactAutosuggestGeocoder = function (_Rea
       return (0, _nodeFetch2.default)(url + '?' + (0, _qs.stringify)(data), {
         method: 'get',
         headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Accept': 'application/json'
         }
       }).then(function (response) {
         return response.json();
@@ -30259,7 +30256,7 @@ ReactAutosuggestGeocoder.propTypes = {
   renderSuggestion: _react2.default.PropTypes.func.isRequired
 };
 ReactAutosuggestGeocoder.defaultProps = {
-  url: 'https://search.mapzen.com/v1',
+  url: 'https://api.geocode.earth/v1',
   sources: 'openaddresses',
   apiKey: null,
   fetchDelay: 150,
@@ -60102,10 +60099,12 @@ var Autosuggest = function (_Component) {
       isCollapsed: !alwaysRenderSuggestions,
       highlightedSectionIndex: null,
       highlightedSuggestionIndex: null,
+      highlightedSuggestion: null,
       valueBeforeUpDown: null
     };
 
     _this.justPressedUpDown = false;
+    _this.justMouseEntered = false;
     return _this;
   }
 
@@ -60121,15 +60120,11 @@ var Autosuggest = function (_Component) {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
       if ((0, _arrays2.default)(nextProps.suggestions, this.props.suggestions)) {
-        if (nextProps.highlightFirstSuggestion && nextProps.suggestions.length > 0 && this.justPressedUpDown === false) {
+        if (nextProps.highlightFirstSuggestion && nextProps.suggestions.length > 0 && this.justPressedUpDown === false && this.justMouseEntered === false) {
           this.highlightFirstSuggestion();
         }
       } else {
         if (this.willRenderSuggestions(nextProps)) {
-          if (nextProps.highlightFirstSuggestion) {
-            this.highlightFirstSuggestion();
-          }
-
           if (this.state.isCollapsed && !this.justSelectedSuggestion) {
             this.revealSuggestions();
           }
@@ -60141,22 +60136,26 @@ var Autosuggest = function (_Component) {
   }, {
     key: 'componentDidUpdate',
     value: function componentDidUpdate(prevProps, prevState) {
-      var onSuggestionHighlighted = this.props.onSuggestionHighlighted;
+      var _props = this.props,
+          suggestions = _props.suggestions,
+          onSuggestionHighlighted = _props.onSuggestionHighlighted,
+          highlightFirstSuggestion = _props.highlightFirstSuggestion;
 
 
-      if (!onSuggestionHighlighted) {
+      if (!(0, _arrays2.default)(suggestions, prevProps.suggestions) && suggestions.length > 0 && highlightFirstSuggestion) {
+        this.highlightFirstSuggestion();
         return;
       }
 
-      var _state = this.state,
-          highlightedSectionIndex = _state.highlightedSectionIndex,
-          highlightedSuggestionIndex = _state.highlightedSuggestionIndex;
+      if (onSuggestionHighlighted) {
+        var highlightedSuggestion = this.getHighlightedSuggestion();
+        var prevHighlightedSuggestion = prevState.highlightedSuggestion;
 
-
-      if (highlightedSectionIndex !== prevState.highlightedSectionIndex || highlightedSuggestionIndex !== prevState.highlightedSuggestionIndex) {
-        var suggestion = this.getHighlightedSuggestion();
-
-        onSuggestionHighlighted({ suggestion: suggestion });
+        if (highlightedSuggestion != prevHighlightedSuggestion) {
+          onSuggestionHighlighted({
+            suggestion: highlightedSuggestion
+          });
+        }
       }
     }
   }, {
@@ -60167,6 +60166,8 @@ var Autosuggest = function (_Component) {
   }, {
     key: 'updateHighlightedSuggestion',
     value: function updateHighlightedSuggestion(sectionIndex, suggestionIndex, prevValue) {
+      var _this2 = this;
+
       this.setState(function (state) {
         var valueBeforeUpDown = state.valueBeforeUpDown;
 
@@ -60180,6 +60181,7 @@ var Autosuggest = function (_Component) {
         return {
           highlightedSectionIndex: sectionIndex,
           highlightedSuggestionIndex: suggestionIndex,
+          highlightedSuggestion: suggestionIndex === null ? null : _this2.getSuggestion(sectionIndex, suggestionIndex),
           valueBeforeUpDown: valueBeforeUpDown
         };
       });
@@ -60196,6 +60198,7 @@ var Autosuggest = function (_Component) {
         return {
           highlightedSectionIndex: null,
           highlightedSuggestionIndex: null,
+          highlightedSuggestion: null,
           valueBeforeUpDown: shouldResetValueBeforeUpDown ? null : valueBeforeUpDown
         };
       });
@@ -60213,6 +60216,7 @@ var Autosuggest = function (_Component) {
       this.setState({
         highlightedSectionIndex: null,
         highlightedSuggestionIndex: null,
+        highlightedSuggestion: null,
         valueBeforeUpDown: null,
         isCollapsed: true
       });
@@ -60220,10 +60224,10 @@ var Autosuggest = function (_Component) {
   }, {
     key: 'getSuggestion',
     value: function getSuggestion(sectionIndex, suggestionIndex) {
-      var _props = this.props,
-          suggestions = _props.suggestions,
-          multiSection = _props.multiSection,
-          getSectionSuggestions = _props.getSectionSuggestions;
+      var _props2 = this.props,
+          suggestions = _props2.suggestions,
+          multiSection = _props2.multiSection,
+          getSectionSuggestions = _props2.getSectionSuggestions;
 
 
       if (multiSection) {
@@ -60235,9 +60239,9 @@ var Autosuggest = function (_Component) {
   }, {
     key: 'getHighlightedSuggestion',
     value: function getHighlightedSuggestion() {
-      var _state2 = this.state,
-          highlightedSectionIndex = _state2.highlightedSectionIndex,
-          highlightedSuggestionIndex = _state2.highlightedSuggestionIndex;
+      var _state = this.state,
+          highlightedSectionIndex = _state.highlightedSectionIndex,
+          highlightedSuggestionIndex = _state.highlightedSuggestionIndex;
 
 
       if (highlightedSuggestionIndex === null) {
@@ -60312,32 +60316,33 @@ var Autosuggest = function (_Component) {
       var valueBeforeUpDown = this.state.valueBeforeUpDown;
 
 
-      return (valueBeforeUpDown || value).trim();
+      return (valueBeforeUpDown === null ? value : valueBeforeUpDown).trim();
     }
   }, {
     key: 'render',
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
 
-      var _props2 = this.props,
-          suggestions = _props2.suggestions,
-          renderInputComponent = _props2.renderInputComponent,
-          onSuggestionsFetchRequested = _props2.onSuggestionsFetchRequested,
-          renderSuggestion = _props2.renderSuggestion,
-          inputProps = _props2.inputProps,
-          multiSection = _props2.multiSection,
-          renderSectionTitle = _props2.renderSectionTitle,
-          id = _props2.id,
-          getSectionSuggestions = _props2.getSectionSuggestions,
-          theme = _props2.theme,
-          getSuggestionValue = _props2.getSuggestionValue,
-          alwaysRenderSuggestions = _props2.alwaysRenderSuggestions;
-      var _state3 = this.state,
-          isFocused = _state3.isFocused,
-          isCollapsed = _state3.isCollapsed,
-          highlightedSectionIndex = _state3.highlightedSectionIndex,
-          highlightedSuggestionIndex = _state3.highlightedSuggestionIndex,
-          valueBeforeUpDown = _state3.valueBeforeUpDown;
+      var _props3 = this.props,
+          suggestions = _props3.suggestions,
+          renderInputComponent = _props3.renderInputComponent,
+          onSuggestionsFetchRequested = _props3.onSuggestionsFetchRequested,
+          renderSuggestion = _props3.renderSuggestion,
+          inputProps = _props3.inputProps,
+          multiSection = _props3.multiSection,
+          renderSectionTitle = _props3.renderSectionTitle,
+          id = _props3.id,
+          getSectionSuggestions = _props3.getSectionSuggestions,
+          theme = _props3.theme,
+          getSuggestionValue = _props3.getSuggestionValue,
+          alwaysRenderSuggestions = _props3.alwaysRenderSuggestions,
+          highlightFirstSuggestion = _props3.highlightFirstSuggestion;
+      var _state2 = this.state,
+          isFocused = _state2.isFocused,
+          isCollapsed = _state2.isCollapsed,
+          highlightedSectionIndex = _state2.highlightedSectionIndex,
+          highlightedSuggestionIndex = _state2.highlightedSuggestionIndex,
+          valueBeforeUpDown = _state2.valueBeforeUpDown;
 
       var shouldRenderSuggestions = alwaysRenderSuggestions ? alwaysTrue : this.props.shouldRenderSuggestions;
       var value = inputProps.value,
@@ -60349,10 +60354,10 @@ var Autosuggest = function (_Component) {
       var items = isOpen ? suggestions : [];
       var autowhateverInputProps = _extends({}, inputProps, {
         onFocus: function onFocus(event) {
-          if (!_this2.justSelectedSuggestion && !_this2.justClickedOnSuggestionsContainer) {
+          if (!_this3.justSelectedSuggestion && !_this3.justClickedOnSuggestionsContainer) {
             var shouldRender = shouldRenderSuggestions(value);
 
-            _this2.setState({
+            _this3.setState({
               isFocused: true,
               isCollapsed: !shouldRender
             });
@@ -60365,16 +60370,16 @@ var Autosuggest = function (_Component) {
           }
         },
         onBlur: function onBlur(event) {
-          if (_this2.justClickedOnSuggestionsContainer) {
-            _this2.input.focus();
+          if (_this3.justClickedOnSuggestionsContainer) {
+            _this3.input.focus();
             return;
           }
 
-          _this2.blurEvent = event;
+          _this3.blurEvent = event;
 
-          if (!_this2.justSelectedSuggestion) {
-            _this2.onBlur();
-            _this2.onSuggestionsClearRequested();
+          if (!_this3.justSelectedSuggestion) {
+            _this3.onBlur();
+            _this3.onSuggestionsClearRequested();
           }
         },
         onChange: function onChange(event) {
@@ -60382,19 +60387,21 @@ var Autosuggest = function (_Component) {
 
           var shouldRender = shouldRenderSuggestions(value);
 
-          _this2.maybeCallOnChange(event, value, 'type');
+          _this3.maybeCallOnChange(event, value, 'type');
 
-          _this2.setState({
+          _this3.setState(_extends({}, highlightFirstSuggestion ? {} : {
             highlightedSectionIndex: null,
             highlightedSuggestionIndex: null,
+            highlightedSuggestion: null
+          }, {
             valueBeforeUpDown: null,
             isCollapsed: !shouldRender
-          });
+          }));
 
           if (shouldRender) {
             onSuggestionsFetchRequested({ value: value, reason: 'input-changed' });
           } else {
-            _this2.onSuggestionsClearRequested();
+            _this3.onSuggestionsClearRequested();
           }
         },
         onKeyDown: function onKeyDown(event, data) {
@@ -60411,7 +60418,7 @@ var Autosuggest = function (_Component) {
                     value: value,
                     reason: 'suggestions-revealed'
                   });
-                  _this2.revealSuggestions();
+                  _this3.revealSuggestions();
                 }
               } else if (suggestions.length > 0) {
                 var newHighlightedSectionIndex = data.newHighlightedSectionIndex,
@@ -60426,19 +60433,19 @@ var Autosuggest = function (_Component) {
                   // If that happens, use the original input value.
                   newValue = valueBeforeUpDown === null ? value : valueBeforeUpDown;
                 } else {
-                  newValue = _this2.getSuggestionValueByIndex(newHighlightedSectionIndex, newHighlightedItemIndex);
+                  newValue = _this3.getSuggestionValueByIndex(newHighlightedSectionIndex, newHighlightedItemIndex);
                 }
 
-                _this2.updateHighlightedSuggestion(newHighlightedSectionIndex, newHighlightedItemIndex, value);
-                _this2.maybeCallOnChange(event, newValue, keyCode === 40 ? 'down' : 'up');
+                _this3.updateHighlightedSuggestion(newHighlightedSectionIndex, newHighlightedItemIndex, value);
+                _this3.maybeCallOnChange(event, newValue, keyCode === 40 ? 'down' : 'up');
               }
 
               event.preventDefault(); // Prevents the cursor from moving
 
-              _this2.justPressedUpDown = true;
+              _this3.justPressedUpDown = true;
 
               setTimeout(function () {
-                _this2.justPressedUpDown = false;
+                _this3.justPressedUpDown = false;
               });
 
               break;
@@ -60451,18 +60458,18 @@ var Autosuggest = function (_Component) {
                   break;
                 }
 
-                var highlightedSuggestion = _this2.getHighlightedSuggestion();
+                var highlightedSuggestion = _this3.getHighlightedSuggestion();
 
                 if (isOpen && !alwaysRenderSuggestions) {
-                  _this2.closeSuggestions();
+                  _this3.closeSuggestions();
                 }
 
-                if (highlightedSuggestion !== null) {
+                if (highlightedSuggestion != null) {
                   var _newValue = getSuggestionValue(highlightedSuggestion);
 
-                  _this2.maybeCallOnChange(event, _newValue, 'enter');
+                  _this3.maybeCallOnChange(event, _newValue, 'enter');
 
-                  _this2.onSuggestionSelected(event, {
+                  _this3.onSuggestionSelected(event, {
                     suggestion: highlightedSuggestion,
                     suggestionValue: _newValue,
                     suggestionIndex: highlightedSuggestionIndex,
@@ -60470,10 +60477,10 @@ var Autosuggest = function (_Component) {
                     method: 'enter'
                   });
 
-                  _this2.justSelectedSuggestion = true;
+                  _this3.justSelectedSuggestion = true;
 
                   setTimeout(function () {
-                    _this2.justSelectedSuggestion = false;
+                    _this3.justSelectedSuggestion = false;
                   });
                 }
 
@@ -60498,7 +60505,7 @@ var Autosuggest = function (_Component) {
                   if (!willCloseSuggestions) {
                     var _newValue2 = '';
 
-                    _this2.maybeCallOnChange(event, _newValue2, 'escape');
+                    _this3.maybeCallOnChange(event, _newValue2, 'escape');
 
                     if (shouldRenderSuggestions(_newValue2)) {
                       onSuggestionsFetchRequested({
@@ -60506,19 +60513,19 @@ var Autosuggest = function (_Component) {
                         reason: 'escape-pressed'
                       });
                     } else {
-                      _this2.onSuggestionsClearRequested();
+                      _this3.onSuggestionsClearRequested();
                     }
                   }
                 } else {
                   // Interacted with Up/Down
-                  _this2.maybeCallOnChange(event, valueBeforeUpDown, 'escape');
+                  _this3.maybeCallOnChange(event, valueBeforeUpDown, 'escape');
                 }
 
                 if (willCloseSuggestions) {
-                  _this2.onSuggestionsClearRequested();
-                  _this2.closeSuggestions();
+                  _this3.onSuggestionsClearRequested();
+                  _this3.closeSuggestions();
                 } else {
-                  _this2.resetHighlightedSuggestion();
+                  _this3.resetHighlightedSuggestion();
                 }
 
                 break;
@@ -60622,10 +60629,10 @@ Autosuggest.defaultProps = {
 };
 
 var _initialiseProps = function _initialiseProps() {
-  var _this3 = this;
+  var _this4 = this;
 
   this.onDocumentMouseDown = function (event) {
-    _this3.justClickedOnSuggestionsContainer = false;
+    _this4.justClickedOnSuggestionsContainer = false;
 
     var node = event.detail && event.detail.target || // This is for testing only. Please show me a better way to emulate this.
     event.target;
@@ -60636,9 +60643,9 @@ var _initialiseProps = function _initialiseProps() {
         return;
       }
 
-      if (node === _this3.suggestionsContainer) {
+      if (node === _this4.suggestionsContainer) {
         // Something else inside suggestions container was clicked
-        _this3.justClickedOnSuggestionsContainer = true;
+        _this4.justClickedOnSuggestionsContainer = true;
         return;
       }
 
@@ -60648,7 +60655,7 @@ var _initialiseProps = function _initialiseProps() {
 
   this.storeAutowhateverRef = function (autowhatever) {
     if (autowhatever !== null) {
-      _this3.autowhatever = autowhatever;
+      _this4.autowhatever = autowhatever;
     }
   };
 
@@ -60656,29 +60663,35 @@ var _initialiseProps = function _initialiseProps() {
     var sectionIndex = _ref3.sectionIndex,
         itemIndex = _ref3.itemIndex;
 
-    _this3.updateHighlightedSuggestion(sectionIndex, itemIndex);
+    _this4.updateHighlightedSuggestion(sectionIndex, itemIndex);
+
+    _this4.justMouseEntered = true;
+
+    setTimeout(function () {
+      _this4.justMouseEntered = false;
+    });
   };
 
   this.highlightFirstSuggestion = function () {
-    _this3.updateHighlightedSuggestion(_this3.props.multiSection ? 0 : null, 0);
+    _this4.updateHighlightedSuggestion(_this4.props.multiSection ? 0 : null, 0);
   };
 
   this.onSuggestionMouseDown = function () {
-    _this3.justSelectedSuggestion = true;
+    _this4.justSelectedSuggestion = true;
   };
 
   this.onSuggestionsClearRequested = function () {
-    var onSuggestionsClearRequested = _this3.props.onSuggestionsClearRequested;
+    var onSuggestionsClearRequested = _this4.props.onSuggestionsClearRequested;
 
 
     onSuggestionsClearRequested && onSuggestionsClearRequested();
   };
 
   this.onSuggestionSelected = function (event, data) {
-    var _props3 = _this3.props,
-        alwaysRenderSuggestions = _props3.alwaysRenderSuggestions,
-        onSuggestionSelected = _props3.onSuggestionSelected,
-        onSuggestionsFetchRequested = _props3.onSuggestionsFetchRequested;
+    var _props4 = _this4.props,
+        alwaysRenderSuggestions = _props4.alwaysRenderSuggestions,
+        onSuggestionSelected = _props4.onSuggestionSelected,
+        onSuggestionsFetchRequested = _props4.onSuggestionsFetchRequested;
 
 
     onSuggestionSelected && onSuggestionSelected(event, data);
@@ -60689,26 +60702,26 @@ var _initialiseProps = function _initialiseProps() {
         reason: 'suggestion-selected'
       });
     } else {
-      _this3.onSuggestionsClearRequested();
+      _this4.onSuggestionsClearRequested();
     }
 
-    _this3.resetHighlightedSuggestion();
+    _this4.resetHighlightedSuggestion();
   };
 
   this.onSuggestionClick = function (event) {
-    var _props4 = _this3.props,
-        alwaysRenderSuggestions = _props4.alwaysRenderSuggestions,
-        focusInputOnSuggestionClick = _props4.focusInputOnSuggestionClick;
+    var _props5 = _this4.props,
+        alwaysRenderSuggestions = _props5.alwaysRenderSuggestions,
+        focusInputOnSuggestionClick = _props5.focusInputOnSuggestionClick;
 
-    var _getSuggestionIndices = _this3.getSuggestionIndices(_this3.findSuggestionElement(event.target)),
+    var _getSuggestionIndices = _this4.getSuggestionIndices(_this4.findSuggestionElement(event.target)),
         sectionIndex = _getSuggestionIndices.sectionIndex,
         suggestionIndex = _getSuggestionIndices.suggestionIndex;
 
-    var clickedSuggestion = _this3.getSuggestion(sectionIndex, suggestionIndex);
-    var clickedSuggestionValue = _this3.props.getSuggestionValue(clickedSuggestion);
+    var clickedSuggestion = _this4.getSuggestion(sectionIndex, suggestionIndex);
+    var clickedSuggestionValue = _this4.props.getSuggestionValue(clickedSuggestion);
 
-    _this3.maybeCallOnChange(event, clickedSuggestionValue, 'click');
-    _this3.onSuggestionSelected(event, {
+    _this4.maybeCallOnChange(event, clickedSuggestionValue, 'click');
+    _this4.onSuggestionSelected(event, {
       suggestion: clickedSuggestion,
       suggestionValue: clickedSuggestionValue,
       suggestionIndex: suggestionIndex,
@@ -60717,43 +60730,44 @@ var _initialiseProps = function _initialiseProps() {
     });
 
     if (!alwaysRenderSuggestions) {
-      _this3.closeSuggestions();
+      _this4.closeSuggestions();
     }
 
     if (focusInputOnSuggestionClick === true) {
-      _this3.input.focus();
+      _this4.input.focus();
     } else {
-      _this3.onBlur();
+      _this4.onBlur();
     }
 
     setTimeout(function () {
-      _this3.justSelectedSuggestion = false;
+      _this4.justSelectedSuggestion = false;
     });
   };
 
   this.onBlur = function () {
-    var _props5 = _this3.props,
-        inputProps = _props5.inputProps,
-        shouldRenderSuggestions = _props5.shouldRenderSuggestions;
+    var _props6 = _this4.props,
+        inputProps = _props6.inputProps,
+        shouldRenderSuggestions = _props6.shouldRenderSuggestions;
     var value = inputProps.value,
         onBlur = inputProps.onBlur;
 
-    var highlightedSuggestion = _this3.getHighlightedSuggestion();
+    var highlightedSuggestion = _this4.getHighlightedSuggestion();
     var shouldRender = shouldRenderSuggestions(value);
 
-    _this3.setState({
+    _this4.setState({
       isFocused: false,
       highlightedSectionIndex: null,
       highlightedSuggestionIndex: null,
+      highlightedSuggestion: null,
       valueBeforeUpDown: null,
       isCollapsed: !shouldRender
     });
 
-    onBlur && onBlur(_this3.blurEvent, { highlightedSuggestion: highlightedSuggestion });
+    onBlur && onBlur(_this4.blurEvent, { highlightedSuggestion: highlightedSuggestion });
   };
 
   this.resetHighlightedSuggestionOnMouseLeave = function () {
-    _this3.resetHighlightedSuggestion(false); // shouldResetValueBeforeUpDown
+    _this4.resetHighlightedSuggestion(false); // shouldResetValueBeforeUpDown
   };
 
   this.itemProps = function (_ref4) {
@@ -60763,24 +60777,24 @@ var _initialiseProps = function _initialiseProps() {
     return {
       'data-section-index': sectionIndex,
       'data-suggestion-index': itemIndex,
-      onMouseEnter: _this3.onSuggestionMouseEnter,
-      onMouseLeave: _this3.resetHighlightedSuggestionOnMouseLeave,
-      onMouseDown: _this3.onSuggestionMouseDown,
-      onTouchStart: _this3.onSuggestionMouseDown, // Because on iOS `onMouseDown` is not triggered
-      onClick: _this3.onSuggestionClick
+      onMouseEnter: _this4.onSuggestionMouseEnter,
+      onMouseLeave: _this4.resetHighlightedSuggestionOnMouseLeave,
+      onMouseDown: _this4.onSuggestionMouseDown,
+      onTouchStart: _this4.onSuggestionMouseDown, // Because on iOS `onMouseDown` is not triggered
+      onClick: _this4.onSuggestionClick
     };
   };
 
   this.renderSuggestionsContainer = function (_ref5) {
     var containerProps = _ref5.containerProps,
         children = _ref5.children;
-    var renderSuggestionsContainer = _this3.props.renderSuggestionsContainer;
+    var renderSuggestionsContainer = _this4.props.renderSuggestionsContainer;
 
 
     return renderSuggestionsContainer({
       containerProps: containerProps,
       children: children,
-      query: _this3.getQuery()
+      query: _this4.getQuery()
     });
   };
 };
@@ -61256,7 +61270,6 @@ var Autowhatever = function (_Component) {
         'aria-autocomplete': 'list',
         'aria-owns': itemsContainerId,
         'aria-expanded': isOpen,
-        'aria-haspopup': isOpen,
         'aria-activedescendant': ariaActivedescendant
       }, theme('react-autowhatever-' + id + '-input', 'input', isOpen && 'inputOpen', isInputFocused && 'inputFocused'), this.props.inputProps, {
         onFocus: this.onFocus,

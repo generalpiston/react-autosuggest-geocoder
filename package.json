@@ -7,7 +7,7 @@
     "example": "examples"
   },
   "dependencies": {
-    "react-autosuggest-geocoder": "^1.0.0-beta.4"
+    "react-autosuggest-geocoder": "abec/react-autosuggest-geocoder"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
