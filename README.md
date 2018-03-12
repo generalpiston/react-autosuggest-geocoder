@@ -4,6 +4,8 @@
 
 ![react autosuggest example](https://abec.github.io/react-autosuggest-geocoder/images/basic.gif)
 
+Thank you to the team at [https://geocode.earth](https://geocode.earth) for lending a pelias service for the demo!
+
 ## Setup / Usage
 
 ### 1. Install react-autosuggest-geocoder
