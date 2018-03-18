@@ -98,3 +98,6 @@ Unfocus browser from the autocomplete input text field.
 
 BSD-3
 
+## Special Thanks
+
+To the folks at https://geocode.earth for their continued work on Pelias.
