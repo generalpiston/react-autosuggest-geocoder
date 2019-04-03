@@ -1,8 +1,8 @@
 # react-autosuggest-geocoder
 
-[react-autosuggest](https://github.com/moroshko/react-autosuggest) with suggestions from [pelias](https://github.com/pelias/pelias) services. Click [here](http://abec.github.io/react-autosuggest-geocoder) to try it out.
+[react-autosuggest](https://github.com/moroshko/react-autosuggest) with suggestions from [pelias](https://github.com/pelias/pelias) services. Click [here](http://generalpiston.github.io/react-autosuggest-geocoder) to try it out.
 
-![react autosuggest example](https://abec.github.io/react-autosuggest-geocoder/images/basic.gif)
+![react autosuggest example](https://generalpiston.github.io/react-autosuggest-geocoder/images/basic.gif)
 
 Thank you to the team at [https://geocode.earth](https://geocode.earth) for lending a pelias service for the demo!
 
