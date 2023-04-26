@@ -20,7 +20,9 @@ export class ReactAutosuggestGeocoder extends React.Component {
     onSuggestionSelected: React.PropTypes.func,
     onReverseSelected: React.PropTypes.func,
     getSuggestionValue: React.PropTypes.func.isRequired,
-    renderSuggestion: React.PropTypes.func.isRequired
+    renderSuggestion: React.PropTypes.func.isRequired,
+
+    fetch: React.PropTypes.func
   };
 
   static defaultProps = {
@@ -37,7 +39,9 @@ export class ReactAutosuggestGeocoder extends React.Component {
       <div className='autosuggest-item'>
         {suggestion.properties.label}
       </div>
-    )
+    ),
+
+    fetch: fetch
   };
 
   constructor (props) {
@@ -91,7 +95,7 @@ export class ReactAutosuggestGeocoder extends React.Component {
       layers: 'address',
       size: 1
     });
-    return fetch(url + '?' + stringify(data), {
+    return this.props.fetch(url + '?' + stringify(data), {
       method: 'get',
       headers: {
         'Accept': 'application/json'
@@ -110,7 +114,7 @@ export class ReactAutosuggestGeocoder extends React.Component {
     }, {
       text: text
     });
-    return fetch(url + '?' + stringify(data), {
+    return this.props.fetch(url + '?' + stringify(data), {
       method: 'get',
       headers: {
         'Accept': 'application/json'
@@ -129,7 +133,7 @@ export class ReactAutosuggestGeocoder extends React.Component {
     }, {
       text: text
     });
-    return fetch(url + '?' + stringify(data), {
+    return this.props.fetch(url + '?' + stringify(data), {
       method: 'get',
       headers: {
         'Accept': 'application/json'
