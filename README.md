@@ -71,6 +71,7 @@ class SearchPage extends React.Component {
 | onReverseSelected | function | | | Invoked after reverse geocoding is performed. |
 | getSuggestionValue | function | ✓ | Identity Function | See https://github.com/moroshko/react-autosuggest#getsuggestionvalue-required for details. |
 | renderSuggestion | function | ✓ | Div Wrapper Function | See https://github.com/moroshko/react-autosuggest#rendersuggestion-required for details. |
+| fetch | function | | `fetch` (from `node-fetch`) | Make the HTTP requests with this custom function
 
 ## Ref Methods
 
