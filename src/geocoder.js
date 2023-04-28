@@ -1,28 +1,29 @@
 import * as _ from 'lodash';
 import React from 'react';
+import PropTypes from 'prop-types';
 import { stringify } from 'qs';
 import fetch from 'node-fetch';
 import Autosuggest from 'react-autosuggest';
 
 export class ReactAutosuggestGeocoder extends React.Component {
   static propTypes = {
-    url: React.PropTypes.string.isRequired,
-    sources: React.PropTypes.string.isRequired,
-    apiKey: React.PropTypes.string.isRequired,
-    fetchDelay: React.PropTypes.number.isRequired,
-    center: React.PropTypes.shape({
-      latitude: React.PropTypes.number.isRequired,
-      longitude: React.PropTypes.number.isRequired
+    url: PropTypes.string.isRequired,
+    sources: PropTypes.string.isRequired,
+    apiKey: PropTypes.string.isRequired,
+    fetchDelay: PropTypes.number.isRequired,
+    center: PropTypes.shape({
+      latitude: PropTypes.number.isRequired,
+      longitude: PropTypes.number.isRequired
     }),
-    bounds: React.PropTypes.array,
+    bounds: PropTypes.array,
 
-    onSearchSelected: React.PropTypes.func,
-    onSuggestionSelected: React.PropTypes.func,
-    onReverseSelected: React.PropTypes.func,
-    getSuggestionValue: React.PropTypes.func.isRequired,
-    renderSuggestion: React.PropTypes.func.isRequired,
+    onSearchSelected: PropTypes.func,
+    onSuggestionSelected: PropTypes.func,
+    onReverseSelected: PropTypes.func,
+    getSuggestionValue: PropTypes.func.isRequired,
+    renderSuggestion: PropTypes.func.isRequired,
 
-    fetch: React.PropTypes.func
+    fetch: PropTypes.func
   };
 
   static defaultProps = {
